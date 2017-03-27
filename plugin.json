@@ -1,0 +1,24 @@
+{
+  "name": "ElasticExportBilligerDE",
+  "description": "This plugin adds the format BilligerDE to the Elastic Export.",
+  "namespace": "ElasticExportBilligerDE",
+  "author": "plentymarkets GmbH",
+  "type": "export",
+  "authorIcon": "icon_author_xs.png",
+  "serviceProvider": "ElasticExportBilligerDE\\ElasticExportBilligerDEServiceProvider",
+  "license": "GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 19 November 2007",
+  "pluginIcon": "icon_plugin_md.png",
+  "price": 0.00,
+  "shortDescription": {
+    "de": "Das Plugin ElasticExportBilligerDE fügt das Datenformat BilligerDE zum Elastischen Export hinzu.",
+    "en": "This plugin adds the format BilligerDE to the Elastic Export."
+  },
+  "categories": [
+    "3523"
+  ],
+  "version": "1.0.0",
+  "marketplaceName": {
+    "de":"Billiger.de",
+    "en":"Billiger.de"
+  }
+}
