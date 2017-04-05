@@ -7,6 +7,7 @@ use Plenty\Modules\DataExchange\Models\FormatSetting;
 use Plenty\Modules\Helper\Services\ArrayHelper;
 use Plenty\Modules\Item\Search\Mutators\ImageMutator;
 use Plenty\Modules\Cloud\ElasticSearch\Lib\Source\Mutator\BuiltIn\LanguageMutator;
+use Plenty\Modules\Item\Search\Mutators\KeyMutator;
 use Plenty\Modules\Item\Search\Mutators\SkuMutator;
 use Plenty\Modules\Item\Search\Mutators\DefaultCategoryMutator;
 
@@ -40,7 +41,7 @@ class BilligerDE extends ResultFields
 
         $this->setOrderByList(['variation.itemId', 'ASC']);
 
-        $reference = $settings->get('referrerId') ? $settings->get('referrerId') : self::RAKUTEN_DE;
+        $reference = $settings->get('referrerId') ? $settings->get('referrerId') : -1;
 
         $itemDescriptionFields = ['texts.urlPath'];
 
@@ -74,6 +75,16 @@ class BilligerDE extends ResultFields
 
         //Mutator
         /**
+         * @var KeyMutator $keyMutator
+         */
+        $keyMutator = pluginApp(KeyMutator::class);
+        if($keyMutator instanceof KeyMutator)
+        {
+            $keyMutator->setKeyList($this->getKeyList());
+            $keyMutator->setNestedKeyList($this->getNestedKeyList());
+        }
+
+        /**
          * @var ImageMutator $imageMutator
          */
         $imageMutator = pluginApp(ImageMutator::class);
@@ -81,6 +92,7 @@ class BilligerDE extends ResultFields
         {
             $imageMutator->addMarket($reference);
         }
+
         /**
          * @var LanguageMutator $languageMutator
          */
@@ -102,7 +114,7 @@ class BilligerDE extends ResultFields
             $defaultCategoryMutator->setPlentyId($settings->get('plentyId'));
         }
 
-
+        // Fields
         $fields = [
             [
                 //item
@@ -172,5 +184,110 @@ class BilligerDE extends ResultFields
         }
 
         return $fields;
+    }
+
+    private function getKeyList()
+    {
+        $keyList = [
+            //item
+            'item.id',
+            'item.manufacturer.id',
+
+            //variation
+            'variation.availability.id',
+            'variation.model',
+
+            //unit
+            'unit.content',
+            'unit.id',
+        ];
+
+        return $keyList;
+    }
+
+    private function getNestedKeyList()
+    {
+        $nestedKeyList['keys'] = [
+            //images
+            'images.all',
+            'images.item',
+            'images.variation',
+
+            //texts
+            'texts',
+
+            //defaultCategories
+            'defaultCategories',
+
+            //barcodes
+            'barcodes',
+
+            //attributes
+            'attributes',
+
+            //properties
+            'properties'
+        ];
+        $nestedKeyList['nestedKeys'] = [
+            'images.all' => [
+                'urlMiddle',
+                'urlPreview',
+                'urlSecondPreview',
+                'url',
+                'path',
+                'position',
+            ],
+
+            'images.item' => [
+                'urlMiddle',
+                'urlPreview',
+                'urlSecondPreview',
+                'url',
+                'path',
+                'position',
+            ],
+
+            'images.variation' => [
+                'urlMiddle',
+                'urlPreview',
+                'urlSecondPreview',
+                'url',
+                'path',
+                'position',
+            ],
+
+            'texts'  => [
+                'urlPath',
+                'name1',
+                'name2',
+                'name3',
+                'shortDescription',
+                'description',
+                'technicalData',
+            ],
+
+            'defaultCategories' => [
+                'id'
+            ],
+
+            'barcodes'  => [
+                'code',
+                'type',
+            ],
+
+            'attributes'   => [
+                'attributeValueSetId',
+                'attributeId',
+                'valueId',
+                'names.name',
+                'names.lang',
+            ],
+
+            'properties'    => [
+                'property.id',
+            ]
+        ];
+
+        return $nestedKeyList;
     }
 }
