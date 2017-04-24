@@ -5,7 +5,7 @@
 
 ## Registering with Billiger.de
 
-billiger.de is a TÜV certified German price comparison portal. The platform also offers test reports and customer reviews. Please note that this website is currently only available in German.
+billiger.de is a German price comparison portal certified by TÜV. The platform also offers test reports and customer reviews. Please note that this website is currently only available in German.
 
 ## Setting up the data format BilligerDE-Plugin in plentymarkets
 

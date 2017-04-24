@@ -2,7 +2,13 @@
 
 namespace ElasticExportBilligerDE;
 
+use Plenty\Modules\DataExchange\Services\ExportPresetContainer;
+use Plenty\Plugin\DataExchangeServiceProvider;
 
+/**
+ * Class ElasticExportBilligerDEServiceProvider
+ * @package ElasticExportBilligerDE
+ */
 class ElasticExportBilligerDEServiceProvider extends DataExchangeServiceProvider
 {
     public function register()

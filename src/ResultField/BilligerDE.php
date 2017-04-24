@@ -8,14 +8,16 @@ use Plenty\Modules\Helper\Services\ArrayHelper;
 use Plenty\Modules\Item\Search\Mutators\ImageMutator;
 use Plenty\Modules\Cloud\ElasticSearch\Lib\Source\Mutator\BuiltIn\LanguageMutator;
 use Plenty\Modules\Item\Search\Mutators\KeyMutator;
-use Plenty\Modules\Item\Search\Mutators\SkuMutator;
 use Plenty\Modules\Item\Search\Mutators\DefaultCategoryMutator;
 
 /**
  * Class BilligerDE
+ * @package ElasticExportBilligerDE\ResultField
  */
 class BilligerDE extends ResultFields
 {
+    const BILLIGER_DE = 151.00;
+
     /**
      * @var ArrayHelper
      */
@@ -23,6 +25,7 @@ class BilligerDE extends ResultFields
 
     /**
      * BilligerDE constructor.
+     * 
      * @param ArrayHelper $arrayHelper
      */
     public function __construct(ArrayHelper $arrayHelper)
@@ -32,6 +35,7 @@ class BilligerDE extends ResultFields
 
     /**
      * Generate result fields.
+     *
      * @param  array $formatSettings = []
      * @return array
      */
@@ -41,7 +45,7 @@ class BilligerDE extends ResultFields
 
         $this->setOrderByList(['variation.itemId', 'ASC']);
 
-        $reference = $settings->get('referrerId') ? $settings->get('referrerId') : -1;
+        $reference = $settings->get('referrerId') ? $settings->get('referrerId') : self::BILLIGER_DE;
 
         $itemDescriptionFields = ['texts.urlPath'];
 
@@ -75,6 +79,15 @@ class BilligerDE extends ResultFields
 
         //Mutator
         /**
+         * @var ImageMutator $imageMutator
+         */
+        $imageMutator = pluginApp(ImageMutator::class);
+        if($imageMutator instanceof ImageMutator)
+        {
+            $imageMutator->addMarket($reference);
+        }
+
+        /**
          * @var KeyMutator $keyMutator
          */
         $keyMutator = pluginApp(KeyMutator::class);
@@ -85,26 +98,10 @@ class BilligerDE extends ResultFields
         }
 
         /**
-         * @var ImageMutator $imageMutator
-         */
-        $imageMutator = pluginApp(ImageMutator::class);
-        if($imageMutator instanceof ImageMutator)
-        {
-            $imageMutator->addMarket($reference);
-        }
-
-        /**
          * @var LanguageMutator $languageMutator
          */
         $languageMutator = pluginApp(LanguageMutator::class, [[$settings->get('lang')]]);
-        /**
-         * @var SkuMutator $skuMutator
-         */
-        $skuMutator = pluginApp(SkuMutator::class);
-        if($skuMutator instanceof SkuMutator)
-        {
-            $skuMutator->setMarket($reference);
-        }
+
         /**
          * @var DefaultCategoryMutator $defaultCategoryMutator
          */
@@ -125,6 +122,7 @@ class BilligerDE extends ResultFields
                 'id',
                 'variation.availability.id',
                 'variation.model',
+                'variation.isMain',
 
                 //images
                 'images.all.urlMiddle',
@@ -165,9 +163,16 @@ class BilligerDE extends ResultFields
                 'attributes.valueId',
                 'attributes.names.name',
                 'attributes.names.lang',
+
+                //properties
+                'properties.property.id',
+                'properties.property.valueType',
+                'properties.selection.name',
+                'properties.texts.value'
             ],
 
             [
+                $keyMutator,
                 $languageMutator,
                 $defaultCategoryMutator
             ],
@@ -186,6 +191,11 @@ class BilligerDE extends ResultFields
         return $fields;
     }
 
+    /**
+     * Returns the list of keys.
+     *
+     * @return array
+     */
     private function getKeyList()
     {
         $keyList = [
@@ -196,6 +206,7 @@ class BilligerDE extends ResultFields
             //variation
             'variation.availability.id',
             'variation.model',
+            'variation.isMain',
 
             //unit
             'unit.content',
@@ -205,6 +216,11 @@ class BilligerDE extends ResultFields
         return $keyList;
     }
 
+    /**
+     * Returns the list of nested keys.
+     *
+     * @return mixed
+     */
     private function getNestedKeyList()
     {
         $nestedKeyList['keys'] = [
@@ -228,7 +244,9 @@ class BilligerDE extends ResultFields
             //properties
             'properties'
         ];
+
         $nestedKeyList['nestedKeys'] = [
+            //images
             'images.all' => [
                 'urlMiddle',
                 'urlPreview',
@@ -256,7 +274,8 @@ class BilligerDE extends ResultFields
                 'position',
             ],
 
-            'texts'  => [
+            //texts
+            'texts' => [
                 'urlPath',
                 'name1',
                 'name2',
@@ -266,16 +285,19 @@ class BilligerDE extends ResultFields
                 'technicalData',
             ],
 
+            //defaultCategories
             'defaultCategories' => [
                 'id'
             ],
 
-            'barcodes'  => [
+            //barcodes
+            'barcodes' => [
                 'code',
                 'type',
             ],
 
-            'attributes'   => [
+            //attributes
+            'attributes' => [
                 'attributeValueSetId',
                 'attributeId',
                 'valueId',
@@ -283,8 +305,12 @@ class BilligerDE extends ResultFields
                 'names.lang',
             ],
 
+            //proprieties
             'properties'    => [
                 'property.id',
+                'property.valueType',
+                'selection.name',
+                'texts.value'
             ]
         ];
 
