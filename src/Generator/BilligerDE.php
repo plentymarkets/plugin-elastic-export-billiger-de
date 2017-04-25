@@ -21,6 +21,7 @@ class BilligerDE extends CSVPluginGenerator
 {
     use Loggable;
 
+    const DELIMITER = "\t"; // tab
     const PROPERTY_TYPE_PZN = 'pzn';
 
     /**
@@ -83,7 +84,7 @@ class BilligerDE extends CSVPluginGenerator
         $settings = $this->arrayHelper->buildMapFromObjectList($formatSettings, 'key', 'value');
 
         // Delimiter accepted are TAB or PIPE
-        $this->setDelimiter("	"); // tab not space!
+        $this->setDelimiter(self::DELIMITER);
 
         // Add the header of the CSV file
         $this->addCSVContent($this->head());
@@ -259,13 +260,11 @@ class BilligerDE extends CSVPluginGenerator
                     'VariationId' => (string)$variation['id']
                 ]);
             }
-
-
         }
         catch (\Throwable $throwable)
         {
             $this->getLogger(__METHOD__)->error('ElasticExportBilligerDE::log.fillRowError', [
-                'Error message ' => $throwable->getMessage(),
+                'Error message' => $throwable->getMessage(),
                 'Error line'    => $throwable->getLine(),
                 'VariationId'   => $variation['id']
             ]);
