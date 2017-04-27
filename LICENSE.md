@@ -1,4 +1,4 @@
-plentymarkets plugin Elastic Export Billiger.de
+plentymarkets plugin Elastic Export billiger.de
 
 Copyright © 2016 plentymarkets GmbH
 
