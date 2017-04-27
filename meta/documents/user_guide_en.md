@@ -1,9 +1,9 @@
 
-# Billiger.de plugin user guide
+# billiger.de plugin user guide
 
 <div class="container-toc"></div>
 
-## Registering with Billiger.de
+## Registering with billiger.de
 
 billiger.de is a German price comparison portal certified by TÜV. The platform also offers test reports and customer reviews. Please note that this website is currently only available in German.
 
@@ -11,7 +11,7 @@ billiger.de is a German price comparison portal certified by TÜV. The platform 
 
 To use this format, you need the Elastic Export plugin.
 
-Follow the instructions given on the [Exporting data](https://www.plentymarkets.co.uk/manual/data-exchange/exporting-data/#4) page of the manual to set up Billiger.de in plentymarkets.
+Follow the instructions given on the [Exporting data](https://www.plentymarkets.co.uk/manual/data-exchange/exporting-data/#4) page of the manual to set up the format in plentymarkets.
 
 ## License
 
