@@ -10,8 +10,8 @@
   "pluginIcon": "icon_plugin_md.png",
   "price": 0.00,
   "shortDescription": {
-    "de": "Das Plugin ElasticExportBilligerDE fügt das Datenformat Billiger.de zum Elastischen Export hinzu.",
-    "en": "This plugin adds the format Billiger.de to the Elastic Export."
+    "de": "Das Plugin ElasticExportBilligerDE fügt das Datenformat BilligerDe zum Elastischen Export hinzu.",
+    "en": "This plugin adds the format BilligerDe to the Elastic Export."
   },
   "categories": [
     "3523"
