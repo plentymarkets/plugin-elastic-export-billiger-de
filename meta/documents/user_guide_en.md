@@ -1,5 +1,5 @@
 
-# billiger.de plugin user guide
+# ElasticExportBilligerDE plugin user guide
 
 <div class="container-toc"></div>
 

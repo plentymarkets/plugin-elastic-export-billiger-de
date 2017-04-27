@@ -11,7 +11,7 @@ billiger.de ist ein deutsches Preisvergleichsportal mit TÜV-Zertifikat, das neb
 
 Um dieses Format nutzen zu können, benötigen Sie das Plugin Elastic Export.
 
-Nachdem Sie das ElasticExportbilligerDEe Plugin im plentyMarketplace gekauft haben, richten Sie das Exportformat wie auf der Handbuchseite [Daten exportieren](https://www.plentymarkets.eu/handbuch/datenaustausch/daten-exportieren/#4) beschrieben ein.
+Nachdem Sie das ElasticExportBilligerDE Plugin im plentyMarketplace gekauft haben, richten Sie das Exportformat wie auf der Handbuchseite [Daten exportieren](https://www.plentymarkets.eu/handbuch/datenaustausch/daten-exportieren/#4) beschrieben ein.
 
 ## Lizenz
 

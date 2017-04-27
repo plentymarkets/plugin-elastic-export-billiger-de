@@ -1,4 +1,4 @@
-plentymarkets plugin ElasticExportBilligerDEe
+plentymarkets plugin ElasticExportBilligerDE
 
 Copyright © 2016 plentymarkets GmbH
 
