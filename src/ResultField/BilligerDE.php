@@ -16,7 +16,7 @@ use Plenty\Modules\Item\Search\Mutators\DefaultCategoryMutator;
  */
 class BilligerDE extends ResultFields
 {
-    const BILLIGER_DE = 151.00;
+    const BILLIGER_DE = 112.00;
 
     /**
      * @var ArrayHelper

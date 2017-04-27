@@ -40,7 +40,7 @@ class StockHelper
      * @param array $filter
      * @return bool
      */
-    public function isFilteredByStock($variation, $filter)
+    public function isFilteredByStock($variation, $filter):bool
     {
         /**
          * If the stock filter is set, this will sort out all variations

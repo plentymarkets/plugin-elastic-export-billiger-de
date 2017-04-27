@@ -12,7 +12,7 @@ class PropertyHelper
 {
     use Loggable;
 
-    const BILLIGER_DE = 151.00;
+    const BILLIGER_DE = 112.00;
 
     const PROPERTY_TYPE_TEXT = 'text';
     const PROPERTY_TYPE_SELECTION = 'selection';
