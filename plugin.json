@@ -18,7 +18,10 @@
   ],
   "version": "1.0.0",
   "marketplaceName": {
-    "de":"Billiger.de",
-    "en":"Billiger.de"
+    "de":"billiger.de",
+    "en":"billiger.de"
+  },
+  "dependencies": {
+    "ElasticExport": ">=1.0.13"
   }
 }

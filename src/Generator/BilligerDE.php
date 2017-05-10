@@ -3,9 +3,9 @@
 namespace ElasticExportBilligerDE\Generator;
 
 use ElasticExport\Helper\ElasticExportCoreHelper;
+use ElasticExport\Helper\ElasticExportStockHelper;
 use ElasticExportBilligerDE\Helper\PriceHelper;
 use ElasticExportBilligerDE\Helper\PropertyHelper;
-use ElasticExportBilligerDE\Helper\StockHelper;
 use Plenty\Modules\DataExchange\Contracts\CSVPluginGenerator;
 use Plenty\Modules\Helper\Services\ArrayHelper;
 use Plenty\Modules\DataExchange\Models\FormatSetting;
@@ -40,34 +40,34 @@ class BilligerDE extends CSVPluginGenerator
     private $priceHelper;
 
     /**
-     * @var StockHelper
-     */
-    private $stockHelper;
-
-    /**
      * @var PropertyHelper
      */
     private $propertyHelper;
+
+    /**
+     * @var ElasticExportStockHelper $elasticExportStockHelper
+     */
+    private $elasticExportStockHelper;
 
     /**
      * BilligerDE constructor.
      *
      * @param ArrayHelper $arrayHelper
      * @param PriceHelper $priceHelper
-     * @param StockHelper $stockHelper
      * @param PropertyHelper $propertyHelper
+     * @param ElasticExportStockHelper $elasticExportStockHelper
      */
     public function __construct(
         ArrayHelper $arrayHelper,
         PriceHelper $priceHelper,
-        StockHelper $stockHelper,
-        PropertyHelper $propertyHelper
+        PropertyHelper $propertyHelper,
+        ElasticExportStockHelper $elasticExportStockHelper
     )
     {
         $this->arrayHelper = $arrayHelper;
         $this->priceHelper = $priceHelper;
-        $this->stockHelper = $stockHelper;
         $this->propertyHelper = $propertyHelper;
+        $this->elasticExportStockHelper = $elasticExportStockHelper;
     }
 
     /**
@@ -139,7 +139,7 @@ class BilligerDE extends CSVPluginGenerator
                         }
 
                         // If filtered by stock is set and stock is negative, then skip the variation
-                        if($this->stockHelper->isFilteredByStock($variation, $filter) === true)
+                        if($this->elasticExportStockHelper->isFilteredByStock($variation, $filter) === true)
                         {
                             $this->getLogger(__METHOD__)->info('ElasticExportBilligerDE::log.variationNotPartOfExportStock', [
                                 'VariationId' => (string)$variation['id']
@@ -164,7 +164,7 @@ class BilligerDE extends CSVPluginGenerator
                         $this->buildRow($variation, $settings, $attributes);
 
                         // Count the new printed line
-                        $limit += 1;
+                        $limit++;
                     }
 
                     $this->getLogger(__METHOD__)->debug('ElasticExportBilligerDE::log.buildRowsDuration', [
@@ -245,7 +245,6 @@ class BilligerDE extends CSVPluginGenerator
                     'dlv_time'  => $this->elasticExportHelper->getAvailability($variation, $settings, false),
                     'dlv_cost'  => $dlvCost,
                     'pzn'       => $this->propertyHelper->getProperty($variation, $settings, self::PROPERTY_TYPE_PZN),
-
                 ];
 
                 $this->addCSVContent(array_values($data));
