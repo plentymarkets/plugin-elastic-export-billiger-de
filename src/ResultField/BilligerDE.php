@@ -2,6 +2,7 @@
 
 namespace ElasticExportBilligerDE\ResultField;
 
+use Plenty\Modules\Cloud\ElasticSearch\Lib\ElasticSearch;
 use Plenty\Modules\DataExchange\Contracts\ResultFields;
 use Plenty\Modules\DataExchange\Models\FormatSetting;
 use Plenty\Modules\Helper\Services\ArrayHelper;
@@ -43,11 +44,11 @@ class BilligerDE extends ResultFields
     {
         $settings = $this->arrayHelper->buildMapFromObjectList($formatSettings, 'key', 'value');
 
-        $this->setOrderByList(['variation.itemId', 'ASC']);
+        $this->setOrderByList(['item.id', ElasticSearch::SORTING_ORDER_ASC]);
 
         $reference = $settings->get('referrerId') ? $settings->get('referrerId') : self::BILLIGER_DE;
 
-        $itemDescriptionFields = ['texts.urlPath'];
+        $itemDescriptionFields = ['texts.urlPath', 'texts.lang'];
 
         switch($settings->get('nameId'))
         {
@@ -277,6 +278,7 @@ class BilligerDE extends ResultFields
             //texts
             'texts' => [
                 'urlPath',
+                'lang',
                 'name1',
                 'name2',
                 'name3',
