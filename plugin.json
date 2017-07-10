@@ -16,12 +16,10 @@
   "categories": [
     "3523"
   ],
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "require": ["ElasticExport"],
   "marketplaceName": {
     "de":"billiger.de",
     "en":"billiger.de"
-  },
-  "dependencies": {
-    "ElasticExport": ">=1.0.18"
   }
 }
