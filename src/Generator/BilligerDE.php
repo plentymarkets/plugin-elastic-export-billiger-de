@@ -26,17 +26,17 @@ class BilligerDE extends CSVPluginGenerator
     const BILLIGER_DE = 112.00;
 
     /**
-     * @var ElasticExportCoreHelper $elasticExportHelper
+     * @var ElasticExportCoreHelper
      */
     private $elasticExportHelper;
 
     /**
-     * @var ElasticExportStockHelper $elasticExportStockHelper
+     * @var ElasticExportStockHelper
      */
     private $elasticExportStockHelper;
 
     /**
-     * @var ElasticExportPriceHelper $elasticExportPriceHelper
+     * @var ElasticExportPriceHelper
      */
     private $elasticExportPriceHelper;
 

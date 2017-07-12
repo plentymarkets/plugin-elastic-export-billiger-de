@@ -1,6 +1,6 @@
 # Release Notes für Elastic Export Billiger.de
 
-## v1.0.1 (2017-07-10)
+## v1.0.1 (2017-07-12)
 
 ### Geändert
 - Das Plugin Elastic Export ist nun Voraussetzung zur Nutzung des Pluginformats BilligerDE.

@@ -115,7 +115,7 @@ class PropertyHelper
                     {
                         if(is_array($property['texts']))
                         {
-                            $list[(string)$propertyMarketReference->externalComponent] = (string)$property['texts'][0]['value'];
+                            $list[(string)$propertyMarketReference->externalComponent] = (string)$property['texts']['value'];
                         }
                     }
 
@@ -123,7 +123,7 @@ class PropertyHelper
                     {
                         if(is_array($property['selection']))
                         {
-                            $list[(string)$propertyMarketReference->externalComponent] = (string)$property['selection'][0]['name'];
+                            $list[(string)$propertyMarketReference->externalComponent] = (string)$property['selection']['name'];
                         }
                     }
 

@@ -181,7 +181,11 @@ class BilligerDE extends ResultFields
                 'properties.property.id',
                 'properties.property.valueType',
                 'properties.selection.name',
-                'properties.texts.value'
+                'properties.selection.lang',
+                'properties.texts.value',
+                'properties.texts.lang',
+                'properties.valueInt',
+                'properties.valueFloat',
             ],
 
             [
@@ -189,7 +193,7 @@ class BilligerDE extends ResultFields
                 $languageMutator,
                 $skuMutator,
                 $defaultCategoryMutator,
-                $barcodeMutator
+                $barcodeMutator,
             ],
         ];
 
@@ -260,7 +264,7 @@ class BilligerDE extends ResultFields
             'attributes',
 
             //properties
-            'properties'
+            'properties',
         ];
 
         $nestedKeyList['nestedKeys'] = [
@@ -294,7 +298,7 @@ class BilligerDE extends ResultFields
 
             //sku
             'skus' => [
-                'sku'
+                'sku',
             ],
 
             //texts
@@ -311,7 +315,7 @@ class BilligerDE extends ResultFields
 
             //defaultCategories
             'defaultCategories' => [
-                'id'
+                'id',
             ],
 
             //barcodes
@@ -334,8 +338,12 @@ class BilligerDE extends ResultFields
                 'property.id',
                 'property.valueType',
                 'selection.name',
-                'texts.value'
-            ]
+                'selection.lang',
+                'texts.value',
+                'texts.lang',
+                'valueInt',
+                'valueFloat',
+            ],
         ];
 
         return $nestedKeyList;
