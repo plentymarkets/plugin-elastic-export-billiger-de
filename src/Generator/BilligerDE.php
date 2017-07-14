@@ -268,11 +268,8 @@ class BilligerDE extends CSVPluginGenerator
         $priceList = $this->elasticExportPriceHelper->getPriceList($variation, $settings);
 
         // Only variations with the Retail Price greater than zero will be handled
-        if(!is_null($priceList['price']) && $priceList['price'] > 0)
+        if(!is_null($priceList['price']) && (float)$priceList['price'] > 0)
         {
-            // Price for base price calculation
-            $variationRetailPrice['variationRetailPrice.price'] = $priceList['price'];
-
             $data = [
                 // mandatory
                 'aid'           => $this->elasticExportHelper->generateSku($variation['id'], self::BILLIGER_DE, 0, (string)$variation['data']['skus'][0]['sku']),
@@ -283,7 +280,7 @@ class BilligerDE extends CSVPluginGenerator
                 'desc'          => $this->elasticExportHelper->getMutatedDescription($variation, $settings),
                 'shop_cat'      => $this->elasticExportHelper->getCategory((int)$variation['data']['defaultCategories'][0]['id'], $settings->get('lang'), $settings->get('plentyId')),
                 'price'         => $priceList['price'],
-                'ppu'           => $this->elasticExportHelper->getBasePrice($variation, $variationRetailPrice, $settings->get('lang')),
+                'ppu'           => $this->elasticExportPriceHelper->getBasePrice($variation, (float)$priceList['price'], $settings->get('lang')),
                 'link'          => $this->elasticExportHelper->getMutatedUrl($variation, $settings, true, false),
                 'image'         => $this->elasticExportHelper->getMainImage($variation, $settings),
                 'dlv_time'      => $this->elasticExportHelper->getAvailability($variation, $settings, false),

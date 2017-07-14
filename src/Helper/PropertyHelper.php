@@ -81,7 +81,7 @@ class PropertyHelper
      * @param string $lang
      * @return array
      */
-    private function getItemPropertyList($variation, $lang):array
+    private function getItemPropertyList($variation, $lang = 'de'):array
     {
         if(!array_key_exists($variation['data']['item']['id'], $this->itemPropertyCache))
         {

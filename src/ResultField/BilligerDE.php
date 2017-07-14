@@ -189,11 +189,11 @@ class BilligerDE extends ResultFields
             ],
 
             [
-                $keyMutator,
                 $languageMutator,
                 $skuMutator,
                 $defaultCategoryMutator,
                 $barcodeMutator,
+                $keyMutator,
             ],
         ];
 

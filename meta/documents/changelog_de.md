@@ -1,12 +1,12 @@
 # Release Notes für Elastic Export Billiger.de
 
-## v1.0.1 (2017-07-12)
+## v1.0.1 (2017-07-14)
+
+### Hinzugefügt
+- Die Felder der CSV-Datei wurden erweitert, um neue Merkmale für billiger.de zu unterstützen..
 
 ### Geändert
 - Das Plugin Elastic Export ist nun Voraussetzung zur Nutzung des Pluginformats BilligerDE.
-
-### Hinzugefügt
-- Zusätzliche Felder in der Export-csv-Datei hinzugefügt, um die zusätzlichen Eigenschaften für billiger.de zugänglich zu machen.
 
 ## v1.0.0 (2017-05-18)
 
