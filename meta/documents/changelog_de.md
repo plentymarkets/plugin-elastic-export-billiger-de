@@ -1,6 +1,6 @@
 # Release Notes für Elastic Export Billiger.de
 
-## v1.0.1 (2017-07-14)
+## v1.0.1 (2017-07-17)
 
 ### Hinzugefügt
 - Die Felder der CSV-Datei wurden erweitert, um neue Merkmale für billiger.de zu unterstützen.
