@@ -3,8 +3,8 @@
 namespace ElasticExportBilligerDE\Generator;
 
 use ElasticExport\Helper\ElasticExportCoreHelper;
+use ElasticExport\Helper\ElasticExportPriceHelper;
 use ElasticExport\Helper\ElasticExportStockHelper;
-use ElasticExportBilligerDE\Helper\PriceHelper;
 use ElasticExportBilligerDE\Helper\PropertyHelper;
 use Plenty\Modules\DataExchange\Contracts\CSVPluginGenerator;
 use Plenty\Modules\Helper\Services\ArrayHelper;
@@ -21,8 +21,9 @@ class BilligerDE extends CSVPluginGenerator
 {
     use Loggable;
 
-    const DELIMITER = "\t"; // tab
-    const PROPERTY_TYPE_PZN = 'pzn';
+    const DELIMITER = "\t"; // TAB
+
+    const BILLIGER_DE = 112.00;
 
     /**
      * @var ElasticExportCoreHelper
@@ -30,14 +31,19 @@ class BilligerDE extends CSVPluginGenerator
     private $elasticExportHelper;
 
     /**
+     * @var ElasticExportStockHelper
+     */
+    private $elasticExportStockHelper;
+
+    /**
+     * @var ElasticExportPriceHelper
+     */
+    private $elasticExportPriceHelper;
+
+    /**
      * @var ArrayHelper
      */
     private $arrayHelper;
-
-    /**
-     * @var PriceHelper
-     */
-    private $priceHelper;
 
     /**
      * @var PropertyHelper
@@ -45,29 +51,23 @@ class BilligerDE extends CSVPluginGenerator
     private $propertyHelper;
 
     /**
-     * @var ElasticExportStockHelper $elasticExportStockHelper
+     * @var array
      */
-    private $elasticExportStockHelper;
+    private $shippingCostCache;
 
     /**
      * BilligerDE constructor.
      *
      * @param ArrayHelper $arrayHelper
-     * @param PriceHelper $priceHelper
      * @param PropertyHelper $propertyHelper
-     * @param ElasticExportStockHelper $elasticExportStockHelper
      */
     public function __construct(
         ArrayHelper $arrayHelper,
-        PriceHelper $priceHelper,
-        PropertyHelper $propertyHelper,
-        ElasticExportStockHelper $elasticExportStockHelper
+        PropertyHelper $propertyHelper
     )
     {
         $this->arrayHelper = $arrayHelper;
-        $this->priceHelper = $priceHelper;
         $this->propertyHelper = $propertyHelper;
-        $this->elasticExportStockHelper = $elasticExportStockHelper;
     }
 
     /**
@@ -80,6 +80,10 @@ class BilligerDE extends CSVPluginGenerator
     protected function generatePluginContent($elasticSearch, array $formatSettings = [], array $filter = [])
     {
         $this->elasticExportHelper = pluginApp(ElasticExportCoreHelper::class);
+
+        $this->elasticExportStockHelper = pluginApp(ElasticExportStockHelper::class);
+
+        $this->elasticExportPriceHelper = pluginApp(ElasticExportPriceHelper::class);
         
         $settings = $this->arrayHelper->buildMapFromObjectList($formatSettings, 'key', 'value');
 
@@ -99,15 +103,16 @@ class BilligerDE extends CSVPluginGenerator
 
             do 
             {
+                // Current number of lines written
+                $this->getLogger(__METHOD__)->debug('ElasticExportBilligerDE::log.writtenLines', [
+                    'Lines written' => $limit,
+                ]);
+
                 // Stop writing if limit is reached
                 if($limitReached === true)
                 {
                     break;
                 }
-
-                $this->getLogger(__METHOD__)->debug('ElasticExportBilligerDE::log.writtenLines', [
-                    'Lines written' => $limit,
-                ]);
 
                 $esStartTime = microtime(true);
 
@@ -129,6 +134,8 @@ class BilligerDE extends CSVPluginGenerator
 
                 if(is_array($resultList['documents']) && count($resultList['documents']) > 0)
                 {
+                    $previousItemId = null;
+
                     foreach ($resultList['documents'] as $variation)
                     {
                         // Stop and set the flag if limit is reached
@@ -148,7 +155,7 @@ class BilligerDE extends CSVPluginGenerator
                             continue;
                         }
 
-                        // Skip the variations that do not have attributes, print just the main variation in that case
+                        // Skip non-main variations that do not have attributes
                         $attributes = $this->getAttributeNameValueCombination($variation, $settings);
 
                         if(strlen($attributes) <= 0 && $variation['variation']['isMain'] === false)
@@ -160,8 +167,29 @@ class BilligerDE extends CSVPluginGenerator
                             continue;
                         }
 
-                        // New line printed in the CSV file
-                        $this->buildRow($variation, $settings, $attributes);
+                        try
+                        {
+                            // Set the caches if we have the first variation or when we have the first variation of an item
+                            if($previousItemId === null || $previousItemId != $variation['data']['item']['id'])
+                            {
+                                $previousItemId = $variation['data']['item']['id'];
+                                unset($this->shippingCostCache);
+
+                                // Build the caches arrays
+                                $this->buildCaches($variation, $settings);
+                            }
+
+                            // New line printed in the CSV file
+                            $this->buildRow($variation, $settings, $attributes);
+                        }
+                        catch(\Throwable $throwable)
+                        {
+                            $this->getLogger(__METHOD__)->error('ElasticExportBilligerDE::logs.fillRowError', [
+                                'Error message ' => $throwable->getMessage(),
+                                'Error line'     => $throwable->getLine(),
+                                'VariationId'    => $variation['id']
+                            ]);
+                        }
 
                         // Count the new printed line
                         $limit++;
@@ -188,6 +216,7 @@ class BilligerDE extends CSVPluginGenerator
     private function head():array
     {
         return array(
+            // mandatory
             'aid',
             'brand',
             'mpnr',
@@ -201,7 +230,29 @@ class BilligerDE extends CSVPluginGenerator
             'image',
             'dlv_time',
             'dlv_cost',
-            'pzn'
+            'pzn',
+
+            // optional
+            'promo_text',
+            'voucher_text',
+            'eec',
+            'light_socket',
+            'wet_grip',
+            'fuel',
+            'rolling_noise',
+            'hsn_tsn',
+            'dia',
+            'bc',
+            'sph_pwr',
+            'cyl',
+            'axis',
+            'size',
+            'color',
+            'gender',
+            'material',
+            'class',
+            'features',
+            'style',
         );
     }
 
@@ -213,59 +264,58 @@ class BilligerDE extends CSVPluginGenerator
      */
     private function buildRow($variation, KeyValue $settings, $attributes)
     {
-        $this->getLogger(__METHOD__)->debug('ElasticExportBilligerDE::log.variationConstructRow', [
-            'Data row duration' => 'Row printing start'
-        ]);
+        // Get the price list
+        $priceList = $this->elasticExportPriceHelper->getPriceList($variation, $settings);
 
-        $rowTime = microtime(true);
-
-        try
+        // Only variations with the Retail Price greater than zero will be handled
+        if(!is_null($priceList['price']) && (float)$priceList['price'] > 0)
         {
-            // Get the price list
-            $priceList = $this->priceHelper->getPriceList($variation, $settings);
+            $data = [
+                // mandatory
+                'aid'           => $this->elasticExportHelper->generateSku($variation['id'], self::BILLIGER_DE, 0, (string)$variation['data']['skus'][0]['sku']),
+                'brand'         => $this->elasticExportHelper->getExternalManufacturerName((int)$variation['data']['item']['manufacturer']['id']),
+                'mpnr'          => $variation['data']['variation']['model'],
+                'ean'           => $this->elasticExportHelper->getBarcodeByType($variation, $settings->get('barcode')),
+                'name'          => $this->elasticExportHelper->getMutatedName($variation, $settings) . (strlen($attributes) ? ', ' . $attributes : ''),
+                'desc'          => $this->elasticExportHelper->getMutatedDescription($variation, $settings),
+                'shop_cat'      => $this->elasticExportHelper->getCategory((int)$variation['data']['defaultCategories'][0]['id'], $settings->get('lang'), $settings->get('plentyId')),
+                'price'         => $priceList['price'],
+                'ppu'           => $this->elasticExportPriceHelper->getBasePrice($variation, (float)$priceList['price'], $settings->get('lang')),
+                'link'          => $this->elasticExportHelper->getMutatedUrl($variation, $settings, true, false),
+                'image'         => $this->elasticExportHelper->getMainImage($variation, $settings),
+                'dlv_time'      => $this->elasticExportHelper->getAvailability($variation, $settings, false),
+                'dlv_cost'      => $this->getShippingCost($variation),
+                'pzn'           => $this->propertyHelper->getProperty($variation, $settings, 'pzn'),
 
-            // Only variations with the Retail Price greater than zero will be handled
-            if($priceList['variationRetailPrice.price'] > 0)
-            {
-                // Get delivery costs
-                $dlvCost = $this->getDeliveryCosts($variation, $settings);
+                // optional
+                'promo_text'    => $this->propertyHelper->getProperty($variation, $settings, 'promo_text'),
+                'voucher_text'  => $this->propertyHelper->getProperty($variation, $settings, 'voucher_text'),
+                'eec'           => $this->propertyHelper->getProperty($variation, $settings, 'eec'),
+                'light_socket'  => $this->propertyHelper->getProperty($variation, $settings, 'light_socket'),
+                'wet_grip'      => $this->propertyHelper->getProperty($variation, $settings, 'wet_grip'),
+                'fuel'          => $this->propertyHelper->getProperty($variation, $settings, 'fuel'),
+                'rolling_noise' => $this->propertyHelper->getProperty($variation, $settings, 'rolling_noise'),
+                'hsn_tsn'       => $this->propertyHelper->getProperty($variation, $settings, 'hsn_tsn'),
+                'dia'           => $this->propertyHelper->getProperty($variation, $settings, 'dia'),
+                'bc'            => $this->propertyHelper->getProperty($variation, $settings, 'bc'),
+                'sph_pwr'       => $this->propertyHelper->getProperty($variation, $settings, 'sph_pwr'),
+                'cyl'           => $this->propertyHelper->getProperty($variation, $settings, 'cyl'),
+                'axis'          => $this->propertyHelper->getProperty($variation, $settings, 'axis'),
+                'size'          => $this->propertyHelper->getProperty($variation, $settings, 'size'),
+                'color'         => $this->propertyHelper->getProperty($variation, $settings, 'color'),
+                'gender'        => $this->propertyHelper->getProperty($variation, $settings, 'gender'),
+                'material'      => $this->propertyHelper->getProperty($variation, $settings, 'material'),
+                'class'         => $this->propertyHelper->getProperty($variation, $settings, 'class'),
+                'features'      => $this->propertyHelper->getProperty($variation, $settings, 'features'),
+                'style'         => $this->propertyHelper->getProperty($variation, $settings, 'style'),
+            ];
 
-                $data = [
-                    'aid'       => $variation['id'],
-                    'brand'     => $this->elasticExportHelper->getExternalManufacturerName((int)$variation['data']['item']['manufacturer']['id']),
-                    'mpnr'      => $variation['data']['variation']['model'],
-                    'ean'       => $this->elasticExportHelper->getBarcodeByType($variation, $settings->get('barcode')),
-                    'name'      => $this->elasticExportHelper->getMutatedName($variation, $settings) . (strlen($attributes) ? ', ' . $attributes : ''),
-                    'desc'      => $this->elasticExportHelper->getMutatedDescription($variation, $settings),
-                    'shop_cat'  => $this->elasticExportHelper->getCategory((int)$variation['data']['defaultCategories'][0]['id'], $settings->get('lang'), $settings->get('plentyId')),
-                    'price'     => number_format((float)$priceList['variationRetailPrice.price'], 2, '.', ''),
-                    'ppu'       => $this->elasticExportHelper->getBasePrice($variation, $priceList, $settings->get('lang')),
-                    'link'      => $this->elasticExportHelper->getMutatedUrl($variation, $settings, true, false),
-                    'image'     => $this->elasticExportHelper->getMainImage($variation, $settings),
-                    'dlv_time'  => $this->elasticExportHelper->getAvailability($variation, $settings, false),
-                    'dlv_cost'  => $dlvCost,
-                    'pzn'       => $this->propertyHelper->getProperty($variation, $settings, self::PROPERTY_TYPE_PZN),
-                ];
-
-                $this->addCSVContent(array_values($data));
-
-                $this->getLogger(__METHOD__)->debug('ElasticExportBilligerDE::log.variationConstructRowFinished', [
-                    'Data row duration' => 'Row printing took: ' . (microtime(true) - $rowTime),
-                ]);
-            }
-            else
-            {
-                $this->getLogger(__METHOD__)->info('ElasticExportBilligerDE::log.variationNotPartOfExportPrice', [
-                    'VariationId' => (string)$variation['id']
-                ]);
-            }
+            $this->addCSVContent(array_values($data));
         }
-        catch (\Throwable $throwable)
+        else
         {
-            $this->getLogger(__METHOD__)->error('ElasticExportBilligerDE::log.fillRowError', [
-                'Error message' => $throwable->getMessage(),
-                'Error line'    => $throwable->getLine(),
-                'VariationId'   => $variation['id']
+            $this->getLogger(__METHOD__)->info('ElasticExportBilligerDE::log.variationNotPartOfExportPrice', [
+                'VariationId' => (string)$variation['id']
             ]);
         }
     }
@@ -293,21 +343,39 @@ class BilligerDE extends CSVPluginGenerator
     }
 
     /**
-     * Get the delivery costs for a variation.
+     * Get the shipping cost.
      *
      * @param $variation
-     * @param KeyValue $settings
      * @return string
      */
-    private function getDeliveryCosts($variation, KeyValue $settings):string
+    private function getShippingCost($variation):string
     {
-        $dlvCost = $this->elasticExportHelper->getShippingCost($variation['data']['item']['id'], $settings);
-
-        if(!is_null($dlvCost))
+        $shippingCost = null;
+        if(isset($this->shippingCostCache) && array_key_exists($variation['data']['item']['id'], $this->shippingCostCache))
         {
-            return number_format((float)$dlvCost, 2, ',', '');
+            $shippingCost = $this->shippingCostCache[$variation['data']['item']['id']];
+        }
+
+        if(!is_null($shippingCost) && $shippingCost != '0.00')
+        {
+            return $shippingCost;
         }
 
         return '';
+    }
+
+    /**
+     * Build the cache arrays for the item variation.
+     *
+     * @param $variation
+     * @param $settings
+     */
+    private function buildCaches($variation, $settings)
+    {
+        if(!is_null($variation) && !is_null($variation['data']['item']['id']))
+        {
+            $shippingCost = $this->elasticExportHelper->getShippingCost($variation['data']['item']['id'], $settings, 0);
+            $this->shippingCostCache[$variation['data']['item']['id']] = number_format((float)$shippingCost, 2, '.', '');
+        }
     }
 }

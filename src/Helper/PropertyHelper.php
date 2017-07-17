@@ -8,6 +8,10 @@ use Plenty\Modules\Item\Property\Models\PropertyName;
 use Plenty\Modules\Helper\Models\KeyValue;
 use Plenty\Plugin\Log\Loggable;
 
+/**
+ * Class PropertyHelper
+ * @package ElasticExportBilligerDE\Helper
+ */
 class PropertyHelper
 {
     use Loggable;
@@ -16,6 +20,9 @@ class PropertyHelper
 
     const PROPERTY_TYPE_TEXT = 'text';
     const PROPERTY_TYPE_SELECTION = 'selection';
+    const PROPERTY_TYPE_EMPTY = 'empty';
+    const PROPERTY_TYPE_INT = 'int';
+    const PROPERTY_TYPE_FLOAT = 'float';
 
     /**
      * @var array
@@ -83,17 +90,24 @@ class PropertyHelper
             foreach($variation['data']['properties'] as $property)
             {
                 if(!is_null($property['property']['id']) &&
-                    $property['property']['valueType'] != 'file' &&
-                    $property['property']['valueType'] != 'empty')
+                    $property['property']['valueType'] != 'file')
                 {
                     $propertyName = $this->propertyNameRepository->findOne($property['property']['id'], $lang);
                     $propertyMarketReference = $this->propertyMarketReferenceRepository->findOne($property['property']['id'], self::BILLIGER_DE);
 
+                    // Skip properties which do not have the External Component set up
                     if(!($propertyName instanceof PropertyName) ||
                         is_null($propertyName) ||
                         is_null($propertyMarketReference) ||
                         $propertyMarketReference->externalComponent == '0')
                     {
+                        $this->getLogger(__METHOD__)->debug('ElasticExportBilligerDE::item.variationPropertyNotAdded', [
+                            'ItemId'            => $variation['data']['item']['id'],
+                            'VariationId'       => $variation['id'],
+                            'Property'          => $property,
+                            'ExternalComponent' => $propertyMarketReference->externalComponent
+                        ]);
+
                         continue;
                     }
 
@@ -101,7 +115,7 @@ class PropertyHelper
                     {
                         if(is_array($property['texts']))
                         {
-                            $list[(string)$propertyMarketReference->externalComponent] = $property['texts'][0]['value'];
+                            $list[(string)$propertyMarketReference->externalComponent] = (string)$property['texts']['value'];
                         }
                     }
 
@@ -109,13 +123,42 @@ class PropertyHelper
                     {
                         if(is_array($property['selection']))
                         {
-                            $list[(string)$propertyMarketReference->externalComponent] = $property['selection'][0]['name'];
+                            $list[(string)$propertyMarketReference->externalComponent] = (string)$property['selection']['name'];
                         }
                     }
+
+                    if($property['property']['valueType'] == self::PROPERTY_TYPE_EMPTY)
+                    {
+                        $list[(string)$propertyMarketReference->externalComponent] = (string)$propertyMarketReference->externalComponent;
+                    }
+
+                    if($property['property']['valueType'] == self::PROPERTY_TYPE_INT)
+                    {
+                        if(!is_null($property['valueInt']))
+                        {
+                            $list[(string)$propertyMarketReference->externalComponent] = (string)$property['valueInt'];
+                        }
+                    }
+
+                    if($property['property']['valueType'] == self::PROPERTY_TYPE_FLOAT)
+                    {
+                        if(!is_null($property['valueFloat']))
+                        {
+                            $list[(string)$propertyMarketReference->externalComponent] = (string)$property['valueFloat'];
+                        }
+                    }
+
                 }
             }
 
+            // Cache the properties list for this item
             $this->itemPropertyCache[$variation['data']['item']['id']] = $list;
+
+            $this->getLogger(__METHOD__)->debug('ElasticExportBilligerDE::item.variationPropertyList', [
+                'ItemId'        => $variation['data']['item']['id'],
+                'VariationId'   => $variation['id'],
+                'PropertyList'  => count($list) > 0 ? $list : 'no properties'
+            ]);
         }
 
         return $this->itemPropertyCache[$variation['data']['item']['id']];
