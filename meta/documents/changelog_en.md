@@ -1,5 +1,10 @@
 # Release Notes for Elastic Export Billiger.de
 
+## v1.0.2 (2017-08-01)
+
+### Fixed
+- An issue was fixed which caused the stock filter to not work as intended.
+
 ## v1.0.1 (2017-07-18)
 
 ### Added

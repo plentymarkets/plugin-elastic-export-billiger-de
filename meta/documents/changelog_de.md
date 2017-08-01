@@ -1,5 +1,10 @@
 # Release Notes für Elastic Export Billiger.de
 
+## v1.0.2 (2017-08-01)
+
+### Behoben
+- Ein Fehler wurde behoben der dazu geführt hat, dass der Bestandsfilter nicht wie vorgesehen funktionierte.
+
 ## v1.0.1 (2017-07-18)
 
 ### Hinzugefügt
