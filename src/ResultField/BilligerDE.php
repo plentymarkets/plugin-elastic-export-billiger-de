@@ -132,6 +132,7 @@ class BilligerDE extends ResultFields
                 'id',
                 'variation.availability.id',
                 'variation.model',
+				'variation.stockLimitation',
                 'variation.isMain',
 
                 //images
