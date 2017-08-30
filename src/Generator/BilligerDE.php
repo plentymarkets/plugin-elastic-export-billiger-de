@@ -409,7 +409,7 @@ class BilligerDE extends CSVPluginGenerator
         }
         else
         {
-            $this->imageCache[] = [];
+            $this->imageCache = [];
             $this->imageCache[$variation['data']['item']['id']] = $this->elasticExportHelper->getImageListInOrder($variation, $settings);
             return $this->imageCache[$variation['data']['item']['id']];
         }
