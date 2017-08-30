@@ -1,5 +1,10 @@
 # Release Notes für Elastic Export Billiger.de
 
+## v1.0.3 (2017-08-30)
+
+### Behoben
+- Versandkosten von 0.00 Euro wurden nicht exportiert.
+
 ## v1.0.2 (2017-08-01)
 
 ### Behoben
