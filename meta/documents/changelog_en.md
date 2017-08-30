@@ -5,6 +5,10 @@
 ### Fixed
 - Shipping costs of 0.00 euro were not exported.
 
+### Added
+- The column "old_price" was added. This allows the export of strikethrough prices.
+- The column "images" was added. This allows the export of additional images.
+
 ## v1.0.2 (2017-08-01)
 
 ### Fixed

@@ -56,6 +56,11 @@ class BilligerDE extends CSVPluginGenerator
     private $shippingCostCache;
 
     /**
+     * @var array
+     */
+    private $imageCache;
+
+    /**
      * BilligerDE constructor.
      *
      * @param ArrayHelper $arrayHelper
@@ -253,6 +258,8 @@ class BilligerDE extends CSVPluginGenerator
             'class',
             'features',
             'style',
+            'old_price',
+            'images',
         );
     }
 
@@ -264,8 +271,10 @@ class BilligerDE extends CSVPluginGenerator
      */
     private function buildRow($variation, KeyValue $settings, $attributes)
     {
-        // Get the price list
-        $priceList = $this->elasticExportPriceHelper->getPriceList($variation, $settings);
+        // Get and set the price and rrp
+        $priceList = $this->getPriceList($variation, $settings);
+
+        $imageList = $this->getImageList($variation, $settings);
 
         // Only variations with the Retail Price greater than zero will be handled
         if(!is_null($priceList['price']) && (float)$priceList['price'] > 0)
@@ -282,7 +291,7 @@ class BilligerDE extends CSVPluginGenerator
                 'price'         => $priceList['price'],
                 'ppu'           => $this->elasticExportPriceHelper->getBasePrice($variation, (float)$priceList['price'], $settings->get('lang')),
                 'link'          => $this->elasticExportHelper->getMutatedUrl($variation, $settings, true, false),
-                'image'         => $this->elasticExportHelper->getMainImage($variation, $settings),
+                'image'         => isset($imageList[0]) ? $imageList[0] : '',
                 'dlv_time'      => $this->elasticExportHelper->getAvailability($variation, $settings, false),
                 'dlv_cost'      => $this->getShippingCost($variation),
                 'pzn'           => $this->propertyHelper->getProperty($variation, $settings, 'pzn'),
@@ -308,6 +317,8 @@ class BilligerDE extends CSVPluginGenerator
                 'class'         => $this->propertyHelper->getProperty($variation, $settings, 'class'),
                 'features'      => $this->propertyHelper->getProperty($variation, $settings, 'features'),
                 'style'         => $this->propertyHelper->getProperty($variation, $settings, 'style'),
+                'old_price'     => $priceList['oldPrice'],
+                'images'        => $this->getAdditionalImages($imageList),
             ];
 
             $this->addCSVContent(array_values($data));
@@ -340,6 +351,88 @@ class BilligerDE extends CSVPluginGenerator
         }
 
         return $attributes;
+    }
+
+    /**
+     * @param  array    $variation
+     * @param  KeyValue $settings
+     * @return array
+     */
+    private function getPriceList(array $variation, KeyValue $settings):array
+    {
+        $price = $oldPrice = '';
+
+        $priceList = $this->elasticExportPriceHelper->getPriceList($variation, $settings);
+
+        //determinate which price to use as 'price'
+        //only use specialPrice if it is set and the lowest price available
+        if(    $priceList['specialPrice'] > 0.00
+            && $priceList['specialPrice'] < $priceList['price'])
+        {
+            $price = $priceList['specialPrice'];
+        }
+        elseif($priceList['price'] > 0.00)
+        {
+            $price = $priceList['price'];
+        }
+
+        //determinate which price to use as 'old_price'
+        //only use oldPrice if it is higher than the normal price
+        if(    $priceList['recommendedRetailPrice'] > 0.00
+            && $priceList['recommendedRetailPrice'] > $price
+            && $priceList['recommendedRetailPrice'] > $priceList['price'])
+        {
+            $oldPrice = $priceList['recommendedRetailPrice'];
+        }
+        elseif($priceList['price'] > 0.00
+            && $priceList['price'] < $price)
+        {
+            $oldPrice = $priceList['price'];
+        }
+
+        return [
+            'price'     => $price,
+            'oldPrice'  => $oldPrice,
+        ];
+    }
+
+    /**
+     * @param  array    $variation
+     * @param  KeyValue $settings
+     * @return array
+     */
+    private function getImageList(array $variation, KeyValue $settings):array
+    {
+        if(isset($this->imageCache[$variation['data']['item']['id']]))
+        {
+            return $this->imageCache[$variation['data']['item']['id']];
+        }
+        else
+        {
+            $this->imageCache[] = [];
+            $this->imageCache[$variation['data']['item']['id']] = $this->elasticExportHelper->getImageListInOrder($variation, $settings);
+            return $this->imageCache[$variation['data']['item']['id']];
+        }
+    }
+
+    /**
+     * Returns a string of all additional picture-URLs separated by ","
+     *
+     * @param array $imageList
+     * @return string
+     */
+    private function getAdditionalImages(array $imageList):string
+    {
+        $imageListString = '';
+
+        unset($imageList[0]);
+
+        if(count($imageList))
+        {
+            $imageListString = implode(',', $imageList);
+        }
+
+        return $imageListString;
     }
 
     /**

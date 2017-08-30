@@ -5,6 +5,10 @@
 ### Behoben
 - Versandkosten von 0.00 Euro wurden nicht exportiert.
 
+### Hinzugefügt
+- Die Spalte "old_price" wurde hinzugefügt. Dies erlaubt die Übertragung von Streichpreisen.
+- Die Spalet "images" wurde hinzugefügt. Dies erlaubt die Übertragung zusätzlicher Bilder.
+
 ## v1.0.2 (2017-08-01)
 
 ### Behoben
