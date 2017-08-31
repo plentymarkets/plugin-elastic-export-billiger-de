@@ -1,5 +1,14 @@
 # Release Notes for Elastic Export Billiger.de
 
+## v1.0.3 (2017-08-30)
+
+### Added
+- The column "old_price" was added. This allows the export of strikethrough prices.
+- The column "images" was added. This allows the export of additional images.
+
+### Fixed
+- Shipping costs of 0.00 euro were not exported.
+
 ## v1.0.2 (2017-08-01)
 
 ### Fixed
