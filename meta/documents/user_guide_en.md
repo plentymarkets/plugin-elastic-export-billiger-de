@@ -125,8 +125,7 @@ The following table lists details for settings, format settings and recommended 
         </td>
         <td>
             <b>Required</b>
-            The **SKU** based on the **variation ID**, if no was configured before.
-            Die **SKU** auf Basis der **Varianten-ID**, falls für die Variante keine definiert wurde.
+            The **SKU** based on the **variation ID**, if no SKU was configured before.
         </td>        
     </tr>
     <tr>
@@ -234,7 +233,7 @@ The following table lists details for settings, format settings and recommended 
         </td>
         <td>
         	<b>Required</b><br>
-            According to the format setting <b>shipping costs</b>.
+            According to the format setting <b>Shipping costs</b>.
         </td>        
     </tr>
     <tr>
@@ -403,7 +402,7 @@ The following table lists details for settings, format settings and recommended 
     		old_price
     	</td>
     	<td>
-    		The **price** of the variation in compared to the RRP. The higher price will be preferred.
+    		The **price** of the variation compared to the RRP. The higher price will be preferred.
     	</td>        
     </tr>
     <tr>
