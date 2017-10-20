@@ -4,7 +4,6 @@ namespace ElasticExportBilligerDE\ResultField;
 
 use Plenty\Modules\Cloud\ElasticSearch\Lib\ElasticSearch;
 use Plenty\Modules\DataExchange\Contracts\ResultFields;
-use Plenty\Modules\DataExchange\Models\FormatSetting;
 use Plenty\Modules\Helper\Services\ArrayHelper;
 use Plenty\Modules\Item\Search\Mutators\BarcodeMutator;
 use Plenty\Modules\Item\Search\Mutators\ImageMutator;
@@ -12,6 +11,8 @@ use Plenty\Modules\Cloud\ElasticSearch\Lib\Source\Mutator\BuiltIn\LanguageMutato
 use Plenty\Modules\Item\Search\Mutators\KeyMutator;
 use Plenty\Modules\Item\Search\Mutators\DefaultCategoryMutator;
 use Plenty\Modules\Item\Search\Mutators\SkuMutator;
+use ElasticExport\DataProvider\ResultFieldDataProvider;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class BilligerDE
@@ -19,6 +20,8 @@ use Plenty\Modules\Item\Search\Mutators\SkuMutator;
  */
 class BilligerDE extends ResultFields
 {
+	use Loggable;
+
     const BILLIGER_DE = 112.00;
 
     /**
@@ -49,25 +52,6 @@ class BilligerDE extends ResultFields
         $this->setOrderByList(['item.id', ElasticSearch::SORTING_ORDER_ASC]);
 
         $reference = $settings->get('referrerId') ? $settings->get('referrerId') : self::BILLIGER_DE;
-
-        $itemDescriptionFields = ['texts.urlPath', 'texts.lang'];
-
-        $itemDescriptionFields[] = ($settings->get('nameId')) ? 'texts.name' . $settings->get('nameId') : 'texts.name1';
-
-        if($settings->get('descriptionType') == 'itemShortDescription'
-            || $settings->get('previewTextType') == 'itemShortDescription')
-        {
-            $itemDescriptionFields[] = 'texts.shortDescription';
-        }
-
-        if($settings->get('descriptionType') == 'itemDescription'
-            || $settings->get('descriptionType') == 'itemDescriptionAndTechnicalData'
-            || $settings->get('previewTextType') == 'itemDescription'
-            || $settings->get('previewTextType') == 'itemDescriptionAndTechnicalData')
-        {
-            $itemDescriptionFields[] = 'texts.description';
-        }
-        $itemDescriptionFields[] = 'texts.technicalData';
 
         //Mutator
         /**
@@ -120,6 +104,34 @@ class BilligerDE extends ResultFields
         {
             $barcodeMutator->addMarket($reference);
         }
+
+		$resultFieldHelper = pluginApp(ResultFieldDataProvider::class);
+		if($resultFieldHelper instanceof ResultFieldDataProvider)
+		{
+			$resultFields = $resultFieldHelper->getResultFields($settings);
+		}
+
+		if(isset($resultFields) && is_array($resultFields) && count($resultFields))
+		{
+			$fields[0] = $resultFields;
+			$fields[1] = [
+				$languageMutator,
+				$skuMutator,
+				$defaultCategoryMutator,
+				$barcodeMutator,
+				$keyMutator,
+			];
+
+			if($reference != -1)
+			{
+				$fields[1][] = $imageMutator;
+			}
+		}
+		else
+		{
+			$this->getLogger(__METHOD__)->critical('ElasticExportBilligerDE::log.resultFieldError');
+			exit();
+		}
 
         // Fields
         $fields = [
@@ -201,11 +213,6 @@ class BilligerDE extends ResultFields
         if($reference != -1)
         {
             $fields[1][] = $imageMutator;
-        }
-
-        foreach($itemDescriptionFields as $itemDescriptionField)
-        {
-            $fields[0][] = $itemDescriptionField;
         }
 
         return $fields;

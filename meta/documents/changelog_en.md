@@ -1,5 +1,10 @@
 # Release Notes for Elastic Export Billiger.de
 
+## v1.0.5 (2017-10-20)
+
+### Changed
+- The export gets the result fields now from the ResultFieldsDataProvider within the ElasticExport plugin.
+
 ## v1.0.4 (2017-09-25)
 
 ### Changed
