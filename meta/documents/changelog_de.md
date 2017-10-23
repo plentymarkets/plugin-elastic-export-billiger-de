@@ -3,7 +3,7 @@
 ## v1.0.5 (2017-10-20)
 
 ### Geändert
-- Der Export bekommt nun die ResultFields von dem ResultFieldDataProvider in dem ElasticExport-Plugin.
+- Der Export bekommt nun die ResultFields von dem ResultFieldDataProvider in dem Elastic Export-Plugin.
 
 ## v1.0.4 (2017-09-25)
 
