@@ -139,7 +139,7 @@ class BilligerDE extends CSVPluginGenerator
                 if(count($resultList['error']) > 0)
                 {
                     $this->getLogger(__METHOD__)->addReference('failedShard', $shardIterator)->error('ElasticExportBilligerDE::log.occurredElasticSearchErrors', [
-                        'Error message' => $resultList['error'],
+                        'message' => $resultList['error'],
                     ]);
                 }
 
@@ -198,8 +198,8 @@ class BilligerDE extends CSVPluginGenerator
                         catch(\Throwable $throwable)
                         {
                             $this->getLogger(__METHOD__)->error('ElasticExportBilligerDE::logs.fillRowError', [
-                                'Error message ' => $throwable->getMessage(),
-                                'Error line'     => $throwable->getLine(),
+                                'message ' => $throwable->getMessage(),
+                                'line'     => $throwable->getLine(),
                                 'VariationId'    => $variation['id']
                             ]);
                         }

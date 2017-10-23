@@ -20,10 +20,13 @@ class ElasticExportBilligerDEServiceProvider extends ServiceProvider
 
     }
 
-	public function boot(
-		ExportPresetContainer $exportPresetContainer
-		)
+	/**
+	 * @param ExportPresetContainer $exportPresetContainer
+	 */
+	public function boot(ExportPresetContainer $exportPresetContainer)
 	{
+
+		//Adds the export format to the export container.
 		$exportPresetContainer->add(
 			'BilligerDE-Plugin',
 			'ElasticExportBilligerDE\ResultField\BilligerDE',
