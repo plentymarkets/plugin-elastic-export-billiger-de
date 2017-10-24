@@ -5,7 +5,7 @@ namespace ElasticExportBilligerDE\Generator;
 use ElasticExport\Helper\ElasticExportCoreHelper;
 use ElasticExport\Helper\ElasticExportPriceHelper;
 use ElasticExport\Helper\ElasticExportStockHelper;
-use ElasticExportBilligerDE\Helper\PropertyHelper;
+use ElasticExport\Helper\ElasticExportPropertyHelper;
 use Plenty\Modules\DataExchange\Contracts\CSVPluginGenerator;
 use Plenty\Modules\Helper\Services\ArrayHelper;
 use Plenty\Modules\DataExchange\Models\FormatSetting;
@@ -46,9 +46,9 @@ class BilligerDE extends CSVPluginGenerator
     private $arrayHelper;
 
     /**
-     * @var PropertyHelper
+     * @var ElasticExportPropertyHelper
      */
-    private $propertyHelper;
+    private $elasticExportPropertyHelper;
 
     /**
      * @var array
@@ -64,15 +64,12 @@ class BilligerDE extends CSVPluginGenerator
      * BilligerDE constructor.
      *
      * @param ArrayHelper $arrayHelper
-     * @param PropertyHelper $propertyHelper
      */
     public function __construct(
-        ArrayHelper $arrayHelper,
-        PropertyHelper $propertyHelper
+        ArrayHelper $arrayHelper
     )
     {
         $this->arrayHelper = $arrayHelper;
-        $this->propertyHelper = $propertyHelper;
     }
 
     /**
@@ -89,6 +86,8 @@ class BilligerDE extends CSVPluginGenerator
         $this->elasticExportStockHelper = pluginApp(ElasticExportStockHelper::class);
 
         $this->elasticExportPriceHelper = pluginApp(ElasticExportPriceHelper::class);
+
+        $this->elasticExportPropertyHelper = pluginApp(ElasticExportPropertyHelper::class);
         
         $settings = $this->arrayHelper->buildMapFromObjectList($formatSettings, 'key', 'value');
 
@@ -105,6 +104,7 @@ class BilligerDE extends CSVPluginGenerator
             // Initiate the counter for the variations limit
             $limitReached = false;
             $limit = 0;
+			$shardIterator = 0;
 
             do 
             {
@@ -124,14 +124,22 @@ class BilligerDE extends CSVPluginGenerator
                 // Get the data from Elastic Search
                 $resultList = $elasticSearch->execute();
 
+				$shardIterator++;
+
+				//log the amount of the elasticsearch result once
+				if($shardIterator == 1)
+				{
+					$this->getLogger(__METHOD__)->addReference('total', (int)$resultList['total'])->info('ElasticExportBilligerDE::log.esResultAmount');
+				}
+
                 $this->getLogger(__METHOD__)->debug('ElasticExportBilligerDE::log.esDuration', [
                     'Elastic Search duration' => microtime(true) - $esStartTime,
                 ]);
 
                 if(count($resultList['error']) > 0)
                 {
-                    $this->getLogger(__METHOD__)->error('ElasticExportBilligerDE::log.occurredElasticSearchErrors', [
-                        'Error message' => $resultList['error'],
+                    $this->getLogger(__METHOD__)->addReference('failedShard', $shardIterator)->error('ElasticExportBilligerDE::log.occurredElasticSearchErrors', [
+                        'message' => $resultList['error'],
                     ]);
                 }
 
@@ -190,8 +198,8 @@ class BilligerDE extends CSVPluginGenerator
                         catch(\Throwable $throwable)
                         {
                             $this->getLogger(__METHOD__)->error('ElasticExportBilligerDE::logs.fillRowError', [
-                                'Error message ' => $throwable->getMessage(),
-                                'Error line'     => $throwable->getLine(),
+                                'message ' => $throwable->getMessage(),
+                                'line'     => $throwable->getLine(),
                                 'VariationId'    => $variation['id']
                             ]);
                         }
@@ -294,29 +302,29 @@ class BilligerDE extends CSVPluginGenerator
                 'image'         => isset($imageList[0]) ? $imageList[0] : '',
                 'dlv_time'      => $this->elasticExportHelper->getAvailability($variation, $settings, false),
                 'dlv_cost'      => $this->getShippingCost($variation),
-                'pzn'           => $this->propertyHelper->getProperty($variation, $settings, 'pzn'),
+                'pzn'           => $this->elasticExportPropertyHelper->getProperty($variation, 'pzn', self::BILLIGER_DE, $settings->get('lang')),
 
                 // optional
-                'promo_text'    => $this->propertyHelper->getProperty($variation, $settings, 'promo_text'),
-                'voucher_text'  => $this->propertyHelper->getProperty($variation, $settings, 'voucher_text'),
-                'eec'           => $this->propertyHelper->getProperty($variation, $settings, 'eec'),
-                'light_socket'  => $this->propertyHelper->getProperty($variation, $settings, 'light_socket'),
-                'wet_grip'      => $this->propertyHelper->getProperty($variation, $settings, 'wet_grip'),
-                'fuel'          => $this->propertyHelper->getProperty($variation, $settings, 'fuel'),
-                'rolling_noise' => $this->propertyHelper->getProperty($variation, $settings, 'rolling_noise'),
-                'hsn_tsn'       => $this->propertyHelper->getProperty($variation, $settings, 'hsn_tsn'),
-                'dia'           => $this->propertyHelper->getProperty($variation, $settings, 'dia'),
-                'bc'            => $this->propertyHelper->getProperty($variation, $settings, 'bc'),
-                'sph_pwr'       => $this->propertyHelper->getProperty($variation, $settings, 'sph_pwr'),
-                'cyl'           => $this->propertyHelper->getProperty($variation, $settings, 'cyl'),
-                'axis'          => $this->propertyHelper->getProperty($variation, $settings, 'axis'),
-                'size'          => $this->propertyHelper->getProperty($variation, $settings, 'size'),
-                'color'         => $this->propertyHelper->getProperty($variation, $settings, 'color'),
-                'gender'        => $this->propertyHelper->getProperty($variation, $settings, 'gender'),
-                'material'      => $this->propertyHelper->getProperty($variation, $settings, 'material'),
-                'class'         => $this->propertyHelper->getProperty($variation, $settings, 'class'),
-                'features'      => $this->propertyHelper->getProperty($variation, $settings, 'features'),
-                'style'         => $this->propertyHelper->getProperty($variation, $settings, 'style'),
+                'promo_text'    => $this->elasticExportPropertyHelper->getProperty($variation, 'promo_text', self::BILLIGER_DE, $settings->get('lang')),
+                'voucher_text'  => $this->elasticExportPropertyHelper->getProperty($variation, 'voucher_text', self::BILLIGER_DE, $settings->get('lang')),
+                'eec'           => $this->elasticExportPropertyHelper->getProperty($variation, 'eec', self::BILLIGER_DE, $settings->get('lang')),
+                'light_socket'  => $this->elasticExportPropertyHelper->getProperty($variation, 'light_socket', self::BILLIGER_DE, $settings->get('lang')),
+                'wet_grip'      => $this->elasticExportPropertyHelper->getProperty($variation, 'wet_grip', self::BILLIGER_DE, $settings->get('lang')),
+                'fuel'          => $this->elasticExportPropertyHelper->getProperty($variation, 'fuel', self::BILLIGER_DE, $settings->get('lang')),
+                'rolling_noise' => $this->elasticExportPropertyHelper->getProperty($variation, 'rolling_noise', self::BILLIGER_DE, $settings->get('lang')),
+                'hsn_tsn'       => $this->elasticExportPropertyHelper->getProperty($variation, 'hsn_tsn', self::BILLIGER_DE, $settings->get('lang')),
+                'dia'           => $this->elasticExportPropertyHelper->getProperty($variation, 'dia', self::BILLIGER_DE, $settings->get('lang')),
+                'bc'            => $this->elasticExportPropertyHelper->getProperty($variation, 'bc', self::BILLIGER_DE, $settings->get('lang')),
+                'sph_pwr'       => $this->elasticExportPropertyHelper->getProperty($variation, 'sph_pwr', self::BILLIGER_DE, $settings->get('lang')),
+                'cyl'           => $this->elasticExportPropertyHelper->getProperty($variation, 'cyl', self::BILLIGER_DE, $settings->get('lang')),
+                'axis'          => $this->elasticExportPropertyHelper->getProperty($variation, 'axis', self::BILLIGER_DE, $settings->get('lang')),
+                'size'          => $this->elasticExportPropertyHelper->getProperty($variation, 'size', self::BILLIGER_DE, $settings->get('lang')),
+                'color'         => $this->elasticExportPropertyHelper->getProperty($variation, 'color', self::BILLIGER_DE, $settings->get('lang')),
+                'gender'        => $this->elasticExportPropertyHelper->getProperty($variation, 'gender', self::BILLIGER_DE, $settings->get('lang')),
+                'material'      => $this->elasticExportPropertyHelper->getProperty($variation, 'material', self::BILLIGER_DE, $settings->get('lang')),
+                'class'         => $this->elasticExportPropertyHelper->getProperty($variation, 'class', self::BILLIGER_DE, $settings->get('lang')),
+                'features'      => $this->elasticExportPropertyHelper->getProperty($variation, 'features', self::BILLIGER_DE, $settings->get('lang')),
+                'style'         => $this->elasticExportPropertyHelper->getProperty($variation, 'style', self::BILLIGER_DE, $settings->get('lang')),
                 'old_price'     => $priceList['oldPrice'],
                 'images'        => $this->getAdditionalImages($imageList),
             ];

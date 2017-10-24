@@ -3,13 +3,14 @@
 namespace ElasticExportBilligerDE;
 
 use Plenty\Modules\DataExchange\Services\ExportPresetContainer;
-use Plenty\Plugin\DataExchangeServiceProvider;
+use Plenty\Plugin\ServiceProvider;
+use Plenty\Log\Services\ReferenceContainer;
 
 /**
  * Class ElasticExportBilligerDEServiceProvider
  * @package ElasticExportBilligerDE
  */
-class ElasticExportBilligerDEServiceProvider extends DataExchangeServiceProvider
+class ElasticExportBilligerDEServiceProvider extends ServiceProvider
 {
     /**
      * Abstract function definition for registering the service provider.
@@ -19,20 +20,21 @@ class ElasticExportBilligerDEServiceProvider extends DataExchangeServiceProvider
 
     }
 
-    /**
-     * Adds the export format to the export container.
-     *
-     * @param ExportPresetContainer $container
-     */
-    public function exports(ExportPresetContainer $container)
-    {
-        $container->add(
-            'BilligerDE-Plugin',
-            'ElasticExportBilligerDE\ResultField\BilligerDE',
-            'ElasticExportBilligerDE\Generator\BilligerDE',
-            '',
-            true,
-            true
-        );
-    }
+	/**
+	 * @param ExportPresetContainer $exportPresetContainer
+	 */
+	public function boot(ExportPresetContainer $exportPresetContainer)
+	{
+
+		//Adds the export format to the export container.
+		$exportPresetContainer->add(
+			'BilligerDE-Plugin',
+			'ElasticExportBilligerDE\ResultField\BilligerDE',
+			'ElasticExportBilligerDE\Generator\BilligerDE',
+			'',
+			true,
+			true
+		);
+	}
+
 }
