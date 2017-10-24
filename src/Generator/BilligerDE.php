@@ -97,8 +97,6 @@ class BilligerDE extends CSVPluginGenerator
         // Add the header of the CSV file
         $this->addCSVContent($this->head());
 
-        $startTime = microtime(true);
-        
         if($elasticSearch instanceof VariationElasticSearchScrollRepositoryContract)
         {
             // Initiate the counter for the variations limit
@@ -108,33 +106,22 @@ class BilligerDE extends CSVPluginGenerator
 
             do 
             {
-                // Current number of lines written
-                $this->getLogger(__METHOD__)->debug('ElasticExportBilligerDE::log.writtenLines', [
-                    'Lines written' => $limit,
-                ]);
-
                 // Stop writing if limit is reached
                 if($limitReached === true)
                 {
                     break;
                 }
 
-                $esStartTime = microtime(true);
-
                 // Get the data from Elastic Search
                 $resultList = $elasticSearch->execute();
 
 				$shardIterator++;
 
-				//log the amount of the elasticsearch result once
+				// Log the amount of the elasticsearch result once
 				if($shardIterator == 1)
 				{
 					$this->getLogger(__METHOD__)->addReference('total', (int)$resultList['total'])->info('ElasticExportBilligerDE::log.esResultAmount');
 				}
-
-                $this->getLogger(__METHOD__)->debug('ElasticExportBilligerDE::log.esDuration', [
-                    'Elastic Search duration' => microtime(true) - $esStartTime,
-                ]);
 
                 if(count($resultList['error']) > 0)
                 {
@@ -142,8 +129,6 @@ class BilligerDE extends CSVPluginGenerator
                         'message' => $resultList['error'],
                     ]);
                 }
-
-                $buildRowsStartTime = microtime(true);
 
                 if(is_array($resultList['documents']) && count($resultList['documents']) > 0)
                 {
@@ -161,10 +146,6 @@ class BilligerDE extends CSVPluginGenerator
                         // If filtered by stock is set and stock is negative, then skip the variation
                         if($this->elasticExportStockHelper->isFilteredByStock($variation, $filter) === true)
                         {
-                            $this->getLogger(__METHOD__)->info('ElasticExportBilligerDE::log.variationNotPartOfExportStock', [
-                                'VariationId' => (string)$variation['id']
-                            ]);
-
                             continue;
                         }
 
@@ -173,10 +154,6 @@ class BilligerDE extends CSVPluginGenerator
 
                         if(strlen($attributes) <= 0 && $variation['variation']['isMain'] === false)
                         {
-                            $this->getLogger(__METHOD__)->info('ElasticExportBilligerDE::log.variationNoAttributesError', [
-                                'VariationId' => (string)$variation['id']
-                            ]);
-
                             continue;
                         }
 
@@ -207,18 +184,10 @@ class BilligerDE extends CSVPluginGenerator
                         // Count the new printed line
                         $limit++;
                     }
-
-                    $this->getLogger(__METHOD__)->debug('ElasticExportBilligerDE::log.buildRowsDuration', [
-                        'Build rows duration' => microtime(true) - $buildRowsStartTime,
-                    ]);
                 }
                 
             } while ($elasticSearch->hasNext());
         }
-
-        $this->getLogger(__METHOD__)->debug('ElasticExportBilligerDE::log.fileGenerationDuration', [
-            'Whole file generation duration' => microtime(true) - $startTime,
-        ]);
     }
 
     /**
@@ -268,6 +237,10 @@ class BilligerDE extends CSVPluginGenerator
             'style',
             'old_price',
             'images',
+
+            // needed for SOP(Solute Order Platform) market
+            'delivery_sop',
+            'stock_quantity',
         );
     }
 
@@ -282,11 +255,12 @@ class BilligerDE extends CSVPluginGenerator
         // Get and set the price and rrp
         $priceList = $this->getPriceList($variation, $settings);
 
-        $imageList = $this->getImageList($variation, $settings);
-
         // Only variations with the Retail Price greater than zero will be handled
         if(!is_null($priceList['price']) && (float)$priceList['price'] > 0)
         {
+            // Get the images only for valid variations
+            $imageList = $this->getAdditionalImages($this->getImageList($variation, $settings));
+
             $data = [
                 // mandatory
                 'aid'           => $this->elasticExportHelper->generateSku($variation['id'], self::BILLIGER_DE, 0, (string)$variation['data']['skus'][0]['sku']),
@@ -326,7 +300,11 @@ class BilligerDE extends CSVPluginGenerator
                 'features'      => $this->elasticExportPropertyHelper->getProperty($variation, 'features', self::BILLIGER_DE, $settings->get('lang')),
                 'style'         => $this->elasticExportPropertyHelper->getProperty($variation, 'style', self::BILLIGER_DE, $settings->get('lang')),
                 'old_price'     => $priceList['oldPrice'],
-                'images'        => $this->getAdditionalImages($imageList),
+                'images'        => $imageList,
+
+                // needed for SOP(Solute Order Platform) market
+                'delivery_sop'      => $this->elasticExportPropertyHelper->getProperty($variation, 'delivery_sop', self::BILLIGER_DE, $settings->get('lang')),
+                'stock_quantity'    => $this->elasticExportStockHelper->getStock($variation),
             ];
 
             $this->addCSVContent(array_values($data));
@@ -362,6 +340,8 @@ class BilligerDE extends CSVPluginGenerator
     }
 
     /**
+     * Get the price list.
+     *
      * @param  array    $variation
      * @param  KeyValue $settings
      * @return array
@@ -405,6 +385,8 @@ class BilligerDE extends CSVPluginGenerator
     }
 
     /**
+     * Get the image list
+     *
      * @param  array    $variation
      * @param  KeyValue $settings
      * @return array
@@ -419,6 +401,7 @@ class BilligerDE extends CSVPluginGenerator
         {
             $this->imageCache = [];
             $this->imageCache[$variation['data']['item']['id']] = $this->elasticExportHelper->getImageListInOrder($variation, $settings);
+
             return $this->imageCache[$variation['data']['item']['id']];
         }
     }
