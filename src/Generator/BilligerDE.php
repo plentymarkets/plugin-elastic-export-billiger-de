@@ -25,6 +25,8 @@ class BilligerDE extends CSVPluginGenerator
 
     const BILLIGER_DE = 112.00;
 
+    const AVAILABLE_ON_SOP = 'delivery_sop';
+
     /**
      * @var ElasticExportCoreHelper
      */
@@ -303,7 +305,7 @@ class BilligerDE extends CSVPluginGenerator
                 'images'        => $imageList,
 
                 // needed for SOP(Solute Order Platform) market
-                'delivery_sop'      => $this->elasticExportPropertyHelper->getProperty($variation, 'delivery_sop', self::BILLIGER_DE, $settings->get('lang')),
+                'delivery_sop'      => $this->isPropertySet($variation, self::AVAILABLE_ON_SOP, $settings),
                 'stock_quantity'    => $this->elasticExportStockHelper->getStock($variation),
             ];
 
@@ -424,6 +426,26 @@ class BilligerDE extends CSVPluginGenerator
         }
 
         return $imageListString;
+    }
+
+    /**
+     * Get if property is set.
+     *
+     * @param  array $variation
+     * @param  string $property
+     * @param  KeyValue $settings
+     * @return int
+     */
+    public function isPropertySet($variation, string $property, $settings):int
+    {
+        $propertyValue = $this->elasticExportPropertyHelper->getProperty($variation, $property, self::BILLIGER_DE, $settings->get('lang'));
+
+        if (isset($propertyValue) && $propertyValue != '')
+        {
+            return 1;
+        }
+
+        return 0;
     }
 
     /**
