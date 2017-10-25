@@ -438,9 +438,9 @@ class BilligerDE extends CSVPluginGenerator
      */
     public function isPropertySet($variation, string $property, $settings):int
     {
-        $propertyValue = $this->elasticExportPropertyHelper->getProperty($variation, $property, self::BILLIGER_DE, $settings->get('lang'));
+        $itemPropertyList = $this->elasticExportPropertyHelper->getItemPropertyList($variation, self::BILLIGER_DE, $settings->get('lang'));
 
-        if (isset($propertyValue) && $propertyValue != '')
+        if(array_key_exists($property, $itemPropertyList))
         {
             return 1;
         }
