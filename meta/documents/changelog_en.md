@@ -1,6 +1,6 @@
 # Release Notes for Elastic Export Billiger.de
 
-## v1.0.6 (2017-10-25)
+## v1.0.6 (2017-10-26)
 
 ### Added
 - The column "delivery_sop" was added. This specifies if the item is available on SOP (Solute Order Platform).
