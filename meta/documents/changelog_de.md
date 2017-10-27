@@ -3,7 +3,7 @@
 ## v1.0.7 (2017-10-27)
 
 ### Geändert
-- Die Performance von dem Plugin wurde verbessert.
+- Plugin-Performance wurde optmimiert.
 
 ## v1.0.6 (2017-10-26)
 
