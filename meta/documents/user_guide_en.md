@@ -412,7 +412,24 @@ The following table lists details for settings, format settings and recommended 
     	<td>
     		Further images of the variation (seperated by comma). 
     	</td>        
-    </tr>        
+    </tr>
+    <tr>
+        <td>
+            delivery_sop
+        </td>
+        <td>
+            The value of the property **delivery_sop**. The name of the property in the interface is 'Available for sale', under SOP (Solute Order Platform).
+        </td>        
+    </tr>
+    <tr>
+        <td>
+            stock_quatitiy
+        </td>
+        <td>
+            <b>Limitation:</b> from 0 to 9999<br>
+            <b>Content:</b> The <b>net stock of the variation</b>. If the variation is not limited to net stock <b>999</b> will be set as value.
+        </td>        
+    </tr>
 </table>
 
 ## 4 License

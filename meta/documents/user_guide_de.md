@@ -428,7 +428,24 @@ In der folgenden Tabelle finden Sie spezifische Hinweise zu den Einstellungen, F
     	<td>
     		Weitere Bilder einer Variante (Komma getrennt). 
     	</td>        
-    </tr>        
+    </tr>
+    <tr>
+        <td>
+            delivery_sop
+        </td>
+        <td>
+            Der Wert des Merkmals **delivery_sop**. Der Name der Merkmale in der Schnittstelle lautet "Zum Verkauf verfügbar", unter SOP (Solute Order Platform).
+        </td>        
+    </tr>
+    <tr>
+        <td>
+            stock_quatitiy
+        </td>
+        <td>
+            <b>Beschränkung:</b> 0 bis 9999<br>
+            <b>Inhalt:</b> Der <b>Netto-Warenbestand der Variante</b>. Bei Artikeln, die nicht auf den Netto-Warenbestand beschränkt sind, wird <b>999</b> übertragen.
+        </td>        
+    </tr> 
 </table>
 
 ## 4 Lizenz

@@ -101,6 +101,9 @@ class BilligerDE extends CSVPluginGenerator
 
         if($elasticSearch instanceof VariationElasticSearchScrollRepositoryContract)
         {
+            // Set the documents per shard for a faster processing
+            $elasticSearch->setNumberOfDocumentsPerShard(250);
+
             // Initiate the counter for the variations limit
             $limitReached = false;
             $limit = 0;
@@ -251,6 +254,7 @@ class BilligerDE extends CSVPluginGenerator
      *
      * @param array $variation
      * @param KeyValue $settings
+     * @param array $attributes
      */
     private function buildRow($variation, KeyValue $settings, $attributes)
     {
@@ -310,12 +314,6 @@ class BilligerDE extends CSVPluginGenerator
             ];
 
             $this->addCSVContent(array_values($data));
-        }
-        else
-        {
-            $this->getLogger(__METHOD__)->info('ElasticExportBilligerDE::log.variationNotPartOfExportPrice', [
-                'VariationId' => (string)$variation['id']
-            ]);
         }
     }
 
