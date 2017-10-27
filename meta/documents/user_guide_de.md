@@ -434,7 +434,7 @@ In der folgenden Tabelle finden Sie spezifische Hinweise zu den Einstellungen, F
             delivery_sop
         </td>
         <td>
-            Der Wert des Merkmals **delivery_sop**. Der Name der Merkmale in der Schnittstelle lautet "Zum Verkauf verfügbar", unter SOP (Solute Order Platform).
+            Der Wert des Merkmals **delivery_sop**. Der Name des Merkmals im plentymarkets Backend lautet "Zum Verkauf verfügbar", unter SOP (Solute Order Platform).
         </td>        
     </tr>
     <tr>
