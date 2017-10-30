@@ -13,7 +13,7 @@ use Plenty\Log\Services\ReferenceContainer;
 class ElasticExportBilligerDEServiceProvider extends ServiceProvider
 {
     /**
-     * Abstract function definition for registering the service provider.
+     * Function definition for registering the service provider.
      */
     public function register()
     {
