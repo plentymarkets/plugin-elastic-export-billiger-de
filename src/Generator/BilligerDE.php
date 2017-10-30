@@ -214,7 +214,7 @@ class BilligerDE extends CSVPluginGenerator
             'price',
             'ppu',
             'link',
-            'image',
+            'images',
             'dlv_time',
             'dlv_cost',
             'pzn',
@@ -241,7 +241,6 @@ class BilligerDE extends CSVPluginGenerator
             'features',
             'style',
             'old_price',
-            'images',
 
             // needed for SOP(Solute Order Platform) market
             'delivery_sop',
@@ -279,7 +278,7 @@ class BilligerDE extends CSVPluginGenerator
                 'price'         => $priceList['price'],
                 'ppu'           => $this->elasticExportPriceHelper->getBasePrice($variation, (float)$priceList['price'], $settings->get('lang')),
                 'link'          => $this->elasticExportHelper->getMutatedUrl($variation, $settings, true, false),
-                'image'         => isset($imageList[0]) ? $imageList[0] : '',
+                'images'        => $imageList,
                 'dlv_time'      => $this->elasticExportHelper->getAvailability($variation, $settings, false),
                 'dlv_cost'      => $this->getShippingCost($variation),
                 'pzn'           => $this->elasticExportPropertyHelper->getProperty($variation, 'pzn', self::BILLIGER_DE, $settings->get('lang')),
@@ -306,7 +305,6 @@ class BilligerDE extends CSVPluginGenerator
                 'features'      => $this->elasticExportPropertyHelper->getProperty($variation, 'features', self::BILLIGER_DE, $settings->get('lang')),
                 'style'         => $this->elasticExportPropertyHelper->getProperty($variation, 'style', self::BILLIGER_DE, $settings->get('lang')),
                 'old_price'     => $priceList['oldPrice'],
-                'images'        => $imageList,
 
                 // needed for SOP(Solute Order Platform) market
                 'delivery_sop'      => $this->isPropertySet($variation, self::AVAILABLE_ON_SOP, $settings),
@@ -393,17 +391,13 @@ class BilligerDE extends CSVPluginGenerator
      */
     private function getImageList(array $variation, KeyValue $settings):array
     {
-        if(isset($this->imageCache[$variation['data']['item']['id']]))
-        {
-            return $this->imageCache[$variation['data']['item']['id']];
-        }
-        else
+        if(!isset($this->imageCache[$variation['data']['item']['id']]))
         {
             $this->imageCache = [];
             $this->imageCache[$variation['data']['item']['id']] = $this->elasticExportHelper->getImageListInOrder($variation, $settings);
-
-            return $this->imageCache[$variation['data']['item']['id']];
         }
+
+        return $this->imageCache[$variation['data']['item']['id']];
     }
 
     /**
@@ -415,8 +409,6 @@ class BilligerDE extends CSVPluginGenerator
     private function getAdditionalImages(array $imageList):string
     {
         $imageListString = '';
-
-        unset($imageList[0]);
 
         if(count($imageList))
         {
