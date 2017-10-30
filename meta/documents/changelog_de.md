@@ -1,6 +1,6 @@
 # Release Notes für Elastic Export Billiger.de
 
-## v1.0.7 (2017-10-27)
+## v1.0.7 (2017-10-30)
 
 ### Geändert
 - Plugin-Performance wurde optmimiert.
