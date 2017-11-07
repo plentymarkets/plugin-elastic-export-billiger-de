@@ -1,5 +1,10 @@
 # Release Notes for Elastic Export Billiger.de
 
+## v1.0.8 (2017-11-07)
+
+### Fixed
+- An issue was fixed which caused the shipping costs to be calculated depending on a predefined method of payment.
+
 ## v1.0.7 (2017-10-30)
 
 ### Changed

@@ -1,5 +1,10 @@
 # Release Notes für Elastic Export Billiger.de
 
+## v1.0.8 (2017-11-07)
+
+### Behoben
+- Es wurde ein Fehler behoben, bei dem die Versandkosten je nach vordefinierter Zahlungsart berechnet wurden.
+
 ## v1.0.7 (2017-10-30)
 
 ### Geändert

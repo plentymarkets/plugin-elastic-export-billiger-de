@@ -446,14 +446,12 @@ class BilligerDE extends CSVPluginGenerator
      */
     private function getShippingCost($variation):string
     {
-        $shippingCost = '';
-
         if(isset($this->shippingCostCache) && array_key_exists($variation['data']['item']['id'], $this->shippingCostCache))
         {
-            $shippingCost = $this->shippingCostCache[$variation['data']['item']['id']];
+            return $this->shippingCostCache[$variation['data']['item']['id']];
         }
 
-        return $shippingCost;
+        return '';
     }
 
     /**
@@ -466,7 +464,7 @@ class BilligerDE extends CSVPluginGenerator
     {
         if(!is_null($variation) && !is_null($variation['data']['item']['id']))
         {
-            $shippingCost = $this->elasticExportHelper->getShippingCost($variation['data']['item']['id'], $settings, 0);
+            $shippingCost = $this->elasticExportHelper->getShippingCost($variation['data']['item']['id'], $settings);
 
             if(!is_null($shippingCost))
             {
