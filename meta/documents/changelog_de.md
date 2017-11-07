@@ -3,7 +3,7 @@
 ## v1.0.8 (2017-11-07)
 
 ### Behoben
-- Ein Fehler wurde behoben der dazu geführt hat, dass der Bestandsfilter nicht wie vorgesehen funktionierte.
+- Es wurde ein Fehler behoben, bei dem die Versandkosten je nach vordefinierter Zahlungsart berechnet wurden.
 
 ## v1.0.7 (2017-10-30)
 
