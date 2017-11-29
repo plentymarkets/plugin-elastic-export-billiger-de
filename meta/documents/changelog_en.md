@@ -1,5 +1,10 @@
 # Release Notes for Elastic Export Billiger.de
 
+## v1.0.9 (2017-11-29)
+
+### Changed
+- Items export is not conditioned anymore by the price existence.
+
 ## v1.0.8 (2017-11-07)
 
 ### Fixed
