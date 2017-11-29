@@ -3,8 +3,7 @@
 ## v1.0.9 (2017-11-29)
 
 ### Changed
-- Items export is not conditioned anymore by the price existence.
-
+- The export of items without a price will not be cancelled through internal logic anymore.
 ## v1.0.8 (2017-11-07)
 
 ### Fixed
