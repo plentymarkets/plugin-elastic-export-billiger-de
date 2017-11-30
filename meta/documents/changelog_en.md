@@ -1,5 +1,9 @@
 # Release Notes for Elastic Export Billiger.de
 
+## v1.0.9 (2017-11-30)
+
+### Changed
+- The export of items without a price will not be cancelled through internal logic anymore.
 ## v1.0.8 (2017-11-07)
 
 ### Fixed

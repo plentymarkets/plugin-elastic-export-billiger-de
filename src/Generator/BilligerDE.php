@@ -260,59 +260,55 @@ class BilligerDE extends CSVPluginGenerator
         // Get and set the price and rrp
         $priceList = $this->getPriceList($variation, $settings);
 
-        // Only variations with the Retail Price greater than zero will be handled
-        if(!is_null($priceList['price']) && (float)$priceList['price'] > 0)
-        {
-            // Get the images only for valid variations
-            $imageList = $this->getAdditionalImages($this->getImageList($variation, $settings));
+        // Get the images only for valid variations
+        $imageList = $this->getAdditionalImages($this->getImageList($variation, $settings));
 
-            $data = [
-                // mandatory
-                'aid'           => $this->elasticExportHelper->generateSku($variation['id'], self::BILLIGER_DE, 0, (string)$variation['data']['skus'][0]['sku']),
-                'brand'         => $this->elasticExportHelper->getExternalManufacturerName((int)$variation['data']['item']['manufacturer']['id']),
-                'mpnr'          => $variation['data']['variation']['model'],
-                'ean'           => $this->elasticExportHelper->getBarcodeByType($variation, $settings->get('barcode')),
-                'name'          => $this->elasticExportHelper->getMutatedName($variation, $settings) . (strlen($attributes) ? ', ' . $attributes : ''),
-                'desc'          => $this->elasticExportHelper->getMutatedDescription($variation, $settings),
-                'shop_cat'      => $this->elasticExportHelper->getCategory((int)$variation['data']['defaultCategories'][0]['id'], $settings->get('lang'), $settings->get('plentyId')),
-                'price'         => $priceList['price'],
-                'ppu'           => $this->elasticExportPriceHelper->getBasePrice($variation, (float)$priceList['price'], $settings->get('lang')),
-                'link'          => $this->elasticExportHelper->getMutatedUrl($variation, $settings, true, false),
-                'images'        => $imageList,
-                'dlv_time'      => $this->elasticExportHelper->getAvailability($variation, $settings, false),
-                'dlv_cost'      => $this->getShippingCost($variation),
-                'pzn'           => $this->elasticExportPropertyHelper->getProperty($variation, 'pzn', self::BILLIGER_DE, $settings->get('lang')),
+        $data = [
+            // mandatory
+            'aid'           => $this->elasticExportHelper->generateSku($variation['id'], self::BILLIGER_DE, 0, (string)$variation['data']['skus'][0]['sku']),
+            'brand'         => $this->elasticExportHelper->getExternalManufacturerName((int)$variation['data']['item']['manufacturer']['id']),
+            'mpnr'          => $variation['data']['variation']['model'],
+            'ean'           => $this->elasticExportHelper->getBarcodeByType($variation, $settings->get('barcode')),
+            'name'          => $this->elasticExportHelper->getMutatedName($variation, $settings) . (strlen($attributes) ? ', ' . $attributes : ''),
+            'desc'          => $this->elasticExportHelper->getMutatedDescription($variation, $settings),
+            'shop_cat'      => $this->elasticExportHelper->getCategory((int)$variation['data']['defaultCategories'][0]['id'], $settings->get('lang'), $settings->get('plentyId')),
+            'price'         => $priceList['price'],
+            'ppu'           => $this->elasticExportPriceHelper->getBasePrice($variation, (float)$priceList['price'], $settings->get('lang')),
+            'link'          => $this->elasticExportHelper->getMutatedUrl($variation, $settings, true, false),
+            'images'        => $imageList,
+            'dlv_time'      => $this->elasticExportHelper->getAvailability($variation, $settings, false),
+            'dlv_cost'      => $this->getShippingCost($variation),
+            'pzn'           => $this->elasticExportPropertyHelper->getProperty($variation, 'pzn', self::BILLIGER_DE, $settings->get('lang')),
 
-                // optional
-                'promo_text'    => $this->elasticExportPropertyHelper->getProperty($variation, 'promo_text', self::BILLIGER_DE, $settings->get('lang')),
-                'voucher_text'  => $this->elasticExportPropertyHelper->getProperty($variation, 'voucher_text', self::BILLIGER_DE, $settings->get('lang')),
-                'eec'           => $this->elasticExportPropertyHelper->getProperty($variation, 'eec', self::BILLIGER_DE, $settings->get('lang')),
-                'light_socket'  => $this->elasticExportPropertyHelper->getProperty($variation, 'light_socket', self::BILLIGER_DE, $settings->get('lang')),
-                'wet_grip'      => $this->elasticExportPropertyHelper->getProperty($variation, 'wet_grip', self::BILLIGER_DE, $settings->get('lang')),
-                'fuel'          => $this->elasticExportPropertyHelper->getProperty($variation, 'fuel', self::BILLIGER_DE, $settings->get('lang')),
-                'rolling_noise' => $this->elasticExportPropertyHelper->getProperty($variation, 'rolling_noise', self::BILLIGER_DE, $settings->get('lang')),
-                'hsn_tsn'       => $this->elasticExportPropertyHelper->getProperty($variation, 'hsn_tsn', self::BILLIGER_DE, $settings->get('lang')),
-                'dia'           => $this->elasticExportPropertyHelper->getProperty($variation, 'dia', self::BILLIGER_DE, $settings->get('lang')),
-                'bc'            => $this->elasticExportPropertyHelper->getProperty($variation, 'bc', self::BILLIGER_DE, $settings->get('lang')),
-                'sph_pwr'       => $this->elasticExportPropertyHelper->getProperty($variation, 'sph_pwr', self::BILLIGER_DE, $settings->get('lang')),
-                'cyl'           => $this->elasticExportPropertyHelper->getProperty($variation, 'cyl', self::BILLIGER_DE, $settings->get('lang')),
-                'axis'          => $this->elasticExportPropertyHelper->getProperty($variation, 'axis', self::BILLIGER_DE, $settings->get('lang')),
-                'size'          => $this->elasticExportPropertyHelper->getProperty($variation, 'size', self::BILLIGER_DE, $settings->get('lang')),
-                'color'         => $this->elasticExportPropertyHelper->getProperty($variation, 'color', self::BILLIGER_DE, $settings->get('lang')),
-                'gender'        => $this->elasticExportPropertyHelper->getProperty($variation, 'gender', self::BILLIGER_DE, $settings->get('lang')),
-                'material'      => $this->elasticExportPropertyHelper->getProperty($variation, 'material', self::BILLIGER_DE, $settings->get('lang')),
-                'class'         => $this->elasticExportPropertyHelper->getProperty($variation, 'class', self::BILLIGER_DE, $settings->get('lang')),
-                'features'      => $this->elasticExportPropertyHelper->getProperty($variation, 'features', self::BILLIGER_DE, $settings->get('lang')),
-                'style'         => $this->elasticExportPropertyHelper->getProperty($variation, 'style', self::BILLIGER_DE, $settings->get('lang')),
-                'old_price'     => $priceList['oldPrice'],
+            // optional
+            'promo_text'    => $this->elasticExportPropertyHelper->getProperty($variation, 'promo_text', self::BILLIGER_DE, $settings->get('lang')),
+            'voucher_text'  => $this->elasticExportPropertyHelper->getProperty($variation, 'voucher_text', self::BILLIGER_DE, $settings->get('lang')),
+            'eec'           => $this->elasticExportPropertyHelper->getProperty($variation, 'eec', self::BILLIGER_DE, $settings->get('lang')),
+            'light_socket'  => $this->elasticExportPropertyHelper->getProperty($variation, 'light_socket', self::BILLIGER_DE, $settings->get('lang')),
+            'wet_grip'      => $this->elasticExportPropertyHelper->getProperty($variation, 'wet_grip', self::BILLIGER_DE, $settings->get('lang')),
+            'fuel'          => $this->elasticExportPropertyHelper->getProperty($variation, 'fuel', self::BILLIGER_DE, $settings->get('lang')),
+            'rolling_noise' => $this->elasticExportPropertyHelper->getProperty($variation, 'rolling_noise', self::BILLIGER_DE, $settings->get('lang')),
+            'hsn_tsn'       => $this->elasticExportPropertyHelper->getProperty($variation, 'hsn_tsn', self::BILLIGER_DE, $settings->get('lang')),
+            'dia'           => $this->elasticExportPropertyHelper->getProperty($variation, 'dia', self::BILLIGER_DE, $settings->get('lang')),
+            'bc'            => $this->elasticExportPropertyHelper->getProperty($variation, 'bc', self::BILLIGER_DE, $settings->get('lang')),
+            'sph_pwr'       => $this->elasticExportPropertyHelper->getProperty($variation, 'sph_pwr', self::BILLIGER_DE, $settings->get('lang')),
+            'cyl'           => $this->elasticExportPropertyHelper->getProperty($variation, 'cyl', self::BILLIGER_DE, $settings->get('lang')),
+            'axis'          => $this->elasticExportPropertyHelper->getProperty($variation, 'axis', self::BILLIGER_DE, $settings->get('lang')),
+            'size'          => $this->elasticExportPropertyHelper->getProperty($variation, 'size', self::BILLIGER_DE, $settings->get('lang')),
+            'color'         => $this->elasticExportPropertyHelper->getProperty($variation, 'color', self::BILLIGER_DE, $settings->get('lang')),
+            'gender'        => $this->elasticExportPropertyHelper->getProperty($variation, 'gender', self::BILLIGER_DE, $settings->get('lang')),
+            'material'      => $this->elasticExportPropertyHelper->getProperty($variation, 'material', self::BILLIGER_DE, $settings->get('lang')),
+            'class'         => $this->elasticExportPropertyHelper->getProperty($variation, 'class', self::BILLIGER_DE, $settings->get('lang')),
+            'features'      => $this->elasticExportPropertyHelper->getProperty($variation, 'features', self::BILLIGER_DE, $settings->get('lang')),
+            'style'         => $this->elasticExportPropertyHelper->getProperty($variation, 'style', self::BILLIGER_DE, $settings->get('lang')),
+            'old_price'     => $priceList['oldPrice'],
 
-                // needed for SOP(Solute Order Platform) market
-                'delivery_sop'      => $this->isPropertySet($variation, self::AVAILABLE_ON_SOP, $settings),
-                'stock_quantity'    => $this->elasticExportStockHelper->getStock($variation),
-            ];
+            // needed for SOP(Solute Order Platform) market
+            'delivery_sop'      => $this->isPropertySet($variation, self::AVAILABLE_ON_SOP, $settings),
+            'stock_quantity'    => $this->elasticExportStockHelper->getStock($variation),
+        ];
 
-            $this->addCSVContent(array_values($data));
-        }
+        $this->addCSVContent(array_values($data));
     }
 
     /**
