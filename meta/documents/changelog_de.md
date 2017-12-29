@@ -1,5 +1,10 @@
 # Release Notes für Elastic Export Billiger.de
 
+## v1.1.0 (2017-12-28)
+
+### Hinzugefügt
+- Das Plugin berücksichtigt die neuen Felder "Bestandspuffer", "Bestand für Varianten ohne Bestandsbeschränkung" und "Bestand für Varianten ohne Bestandsführung".
+
 ## v1.0.9 (2017-11-30)
 
 ### Geändert

@@ -92,6 +92,8 @@ class BilligerDE extends CSVPluginGenerator
         $this->elasticExportPropertyHelper = pluginApp(ElasticExportPropertyHelper::class);
         
         $settings = $this->arrayHelper->buildMapFromObjectList($formatSettings, 'key', 'value');
+        
+        $this->elasticExportStockHelper->setAdditionalStockInformation($settings);
 
         // Delimiter accepted are TAB or PIPE
         $this->setDelimiter(self::DELIMITER);
