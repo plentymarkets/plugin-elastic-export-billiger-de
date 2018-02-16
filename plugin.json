@@ -10,13 +10,13 @@
   "pluginIcon": "icon_plugin_md.png",
   "price": 0.00,
   "shortDescription": {
-    "de": "Das Plugin ElasticExportBilligerDE fügt das Datenformat BilligerDE-Plugin zum Elastischen Export hinzu.",
-    "en": "This plugin adds the format BilligerDE-Plugin to the Elastic Export."
+    "de": "Die Integration des Datenformats BilligerDE-Plugin ermöglicht die Artikeldatenübertragung zum Preisportal billiger.de über den elastischen Export.",
+    "en": "The integration of the data format BilligerDE-Plugin enables the transfer of item data to the price search engine billiger.de via the elastic export."
   },
   "categories": [
     "3523"
   ],
-  "version": "1.1.0",
+  "version": "1.1.1",
   "require": ["ElasticExport"],
   "marketplaceName": {
     "de":"billiger.de",
