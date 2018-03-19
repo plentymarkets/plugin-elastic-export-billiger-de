@@ -57,7 +57,7 @@ In der folgenden Tabelle finden Sie spezifische Hinweise zu den Einstellungen, F
 | **UVP**                                             | Aktivieren, um den UVP zu übertragen. |
 | **Versandkosten**                                   | Es werden die Zahlungsarten gemäß der Formateinstellung **Versandkosten** übermittelt. |
 | **MwSt.-Hinweis**                                   | Diese Option ist für dieses Format nicht relevant. |
-| **Artikelverfügbarkeit**                            | Der **Name der Artikelverfügbarkeit** unter **Einstellungen » Artikel » Artikelverfügbarkeit**.<br/> Option **überschreiben** aktivieren und in die Felder **1** bis **10**, die die ID der Verfügbarkeit darstellen, Artikelverfügbarkeiten eintragen. Somit werden die Artikelverfügbarkeiten, die im Menü **System » Artikel » Verfügbarkeit** eingestellt wurden, überschrieben. |
+| **Artikelverfügbarkeit**                            | Der **Name der Artikelverfügbarkeit** unter **System » Artikel » Artikelverfügbarkeit**.<br/> Option **überschreiben** aktivieren und in die Felder **1** bis **10**, die die ID der Verfügbarkeit darstellen, Artikelverfügbarkeiten eintragen. Somit werden die Artikelverfügbarkeiten, die im Menü **System » Artikel » Verfügbarkeit** eingestellt wurden, überschrieben. |
 
 ## 3 Verfügbare Spalten der Exportdatei
 
