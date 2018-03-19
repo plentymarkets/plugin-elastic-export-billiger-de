@@ -4,6 +4,7 @@
 
 ### Added
 - Information was added to the tables in the User Guide.
+- Info tab was added.
 
 ## v1.1.1 (2018-02-16)
 
