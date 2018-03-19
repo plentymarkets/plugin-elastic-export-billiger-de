@@ -1,6 +1,6 @@
 # Release Notes für Elastic Export Billiger.de
 
-## v1.1.2 (2018-03-16)
+## v1.1.2 (2018-03-19)
 
 ### Hinzugefügt
 - Die Tabellen im User Guide wurden ergänzt.
