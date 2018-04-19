@@ -1,5 +1,11 @@
 # Release Notes for Elastic Export Billiger.de
 
+## v1.1.3 (2018-03-28)
+
+### Changed
+- The class FiltrationService is responsible for the filtration of all variations.
+- Preview images updated.
+
 ## v1.1.2 (2018-03-19)
 
 ### Added
