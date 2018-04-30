@@ -95,7 +95,7 @@ class BilligerDE extends CSVPluginGenerator
         $this->elasticExportPropertyHelper = pluginApp(ElasticExportPropertyHelper::class);
         
         $settings = $this->arrayHelper->buildMapFromObjectList($formatSettings, 'key', 'value');
-        $this->filtrationService = pluginApp(FiltrationService::class, [$settings, $filter]);
+		$this->filtrationService = pluginApp(FiltrationService::class, ['settings' => $settings, 'filterSettings' => $filter]);
         
         $this->elasticExportStockHelper->setAdditionalStockInformation($settings);
 
