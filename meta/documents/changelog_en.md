@@ -1,5 +1,10 @@
 # Release Notes for Elastic Export Billiger.de
 
+## v1.1.4 (2018-04-30)
+
+### Changed
+- Laravel 5.5 update.
+
 ## v1.1.3 (2018-03-28)
 
 ### Changed
