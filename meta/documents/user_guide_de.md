@@ -10,7 +10,7 @@ billiger.de ist ein deutsches Preisvergleichsportal mit TÜV-Zertifikat, das neb
 
 Mit der Installation dieses Plugins erhalten Sie das Exportformat **BilligerDE-Plugin**, mit dem Sie Daten über den elastischen Export zu billiger.de übertragen. Um dieses Format für den elastischen Export nutzen zu können, installieren Sie zunächst das Plugin **Elastic Export** aus dem plentyMarketplace, wenn noch nicht geschehen.
 
-Sobald beide Plugins im Ihrem System installiert sind, kann das Exportformat **BilligerDE-Plugin** erstellt werden. Mehr Informationen finden Sie auch auf der Handbuchseite [Daten exportieren](https://knowledge.plentymarkets.com/basics/datenaustausch/daten-exportieren#60).
+Sobald beide Plugins im Ihrem System installiert sind, kann das Exportformat **BilligerDE-Plugin** erstellt werden. Mehr Informationen finden Sie auch auf der Handbuchseite [Datenformate für Preissuchmaschinen exportieren](https://knowledge.plentymarkets.com/basics/datenaustausch/export-import/daten-exportieren#30).
 
 Neues Exportformat erstellen:
 
@@ -24,7 +24,7 @@ In der folgenden Tabelle finden Sie spezifische Hinweise zu den Einstellungen, F
 
 | **Einstellung**                                     | **Erläuterung** | 
 | :---                                                | :--- |
-| **Einstellungen**                                   |
+| **Einstellungen**                                   | |
 | **Name**                                            | Name eingeben. Unter diesem Namen erscheint das Exportformat in der Übersicht im Tab **Exporte**. |
 | **Typ**                                             | Typ **Artikel** aus der Dropdown-Liste wählen. |
 | **Format**                                          | **BilligerDE-Plugin** wählen. |
@@ -33,9 +33,9 @@ In der folgenden Tabelle finden Sie spezifische Hinweise zu den Einstellungen, F
 | **Bereitstellung**                                  | **URL** wählen. Mit dieser Option kann ein Token für die Authentifizierung generiert werden, damit ein externer Zugriff möglich ist. |
 | **Token, URL**                                      | Wenn unter **Bereitstellung** die Option **URL** gewählt wurde, auf **Token generieren** klicken. Der Token wird dann automatisch eingetragen. Die URL wird automatisch eingetragen, wenn unter **Token** der Token generiert wurde. |
 | **Dateiname**                                       | Der Dateiname muss auf **.csv** enden, damit billiger.de die Datei erfolgreich importieren kann. |
-| **Artikelfilter**                                   |
+| **Artikelfilter**                                   | |
 | **Artikelfilter hinzufügen**                        | Artikelfilter aus der Dropdown-Liste wählen und auf **Hinzufügen** klicken. Standardmäßig sind keine Filter voreingestellt. Es ist möglich, alle Artikelfilter aus der Dropdown-Liste nacheinander hinzuzufügen.<br/> **Varianten** = **Alle übertragen** oder **Nur Hauptvarianten übertragen** wählen.<br/> **Märkte** = Einen, mehrere oder **ALLE** Märkte wählen. Die Verfügbarkeit muss für alle hier gewählten Märkte am Artikel hinterlegt sein. Andernfalls findet kein Export statt.<br/> **Währung** = Währung wählen.<br/> **Kategorie** = Aktivieren, damit der Artikel mit Kategorieverknüpfung übertragen wird. Es werden nur Artikel, die dieser Kategorie zugehören, übertragen.<br/> **Bild** = Aktivieren, damit der Artikel mit Bild übertragen wird. Es werden nur Artikel mit Bildern übertragen.<br/> **Mandant** = Mandant wählen.<br/> **Bestand** = Wählen, welche Bestände exportiert werden sollen.<br/> **Markierung 1 - 2** = Markierung wählen.<br/> **Hersteller** = Einen, mehrere oder **ALLE** Hersteller wählen.<br/> **Aktiv** = Nur aktive Varianten werden übertragen. |
-| **Formateinstellugen**                              |
+| **Formateinstellugen**                              | |
 | **Produkt-URL**                                     | Wählen, ob die URL des Artikels oder der Variante an das Preisportal übertragen wird. Varianten URLs können nur in Kombination mit dem Ceres Webshop übertragen werden. |
 | **Mandant**                                         | Mandant wählen. Diese Einstellung wird für den URL-Aufbau verwendet. |
 | **URL-Parameter**                                   | Suffix für die Produkt-URL eingeben, wenn dies für den Export erforderlich ist. Die Produkt-URL wird dann um die eingegebene Zeichenkette erweitert, wenn weiter oben die Option **übertragen** für die Produkt-URL aktiviert wurde. |
@@ -52,6 +52,7 @@ In der folgenden Tabelle finden Sie spezifische Hinweise zu den Einstellungen, F
 | **Bestandspuffer**                                  | Der Bestandspuffer für Varianten mit der Beschränkung auf den Netto Warenbestand. |
 | **Bestand für Varianten ohne Bestandsbeschränkung** | Der Bestand für Varianten ohne Bestandsbeschränkung. |
 | **Bestand für Varianten ohne Bestandsführung**      | Der Bestand für Varianten ohne Bestandsführung. |
+| **Währung live umrechnen**                          | Aktivieren, damit der Preis je nach eingestelltem Lieferland in die Währung des Lieferlandes umgerechnet wird. Der Preis muss für die entsprechende Währung freigegeben sein. |
 | **Verkaufspreis**                                   | Brutto- oder Nettopreis aus der Dropdown-Liste wählen. |
 | **Angebotspreis**                                   | Diese Option ist für dieses Format nicht relevant. |
 | **UVP**                                             | Aktivieren, um den UVP zu übertragen. |
