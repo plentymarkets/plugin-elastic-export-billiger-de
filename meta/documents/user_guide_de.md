@@ -10,7 +10,7 @@ billiger.de ist ein deutsches Preisvergleichsportal mit TÜV-Zertifikat, das neb
 
 Mit der Installation dieses Plugins erhalten Sie das Exportformat **BilligerDE-Plugin**, mit dem Sie Daten über den elastischen Export zu billiger.de übertragen. Um dieses Format für den elastischen Export nutzen zu können, installieren Sie zunächst das Plugin **Elastic Export** aus dem plentyMarketplace, wenn noch nicht geschehen.
 
-Sobald beide Plugins im Ihrem System installiert sind, kann das Exportformat **BilligerDE-Plugin** erstellt werden. Mehr Informationen finden Sie auch auf der Handbuchseite [Datenformate für Preissuchmaschinen exportieren](https://knowledge.plentymarkets.com/basics/datenaustausch/export-import/daten-exportieren#30).
+Sobald beide Plugins im Ihrem System installiert sind, kann das Exportformat **BilligerDE-Plugin** erstellt werden. Weitere Informationen finden Sie auf der Handbuchseite [Elastischer Export](https://knowledge.plentymarkets.com/basics/datenaustausch/elastischer-export).
 
 Neues Exportformat erstellen:
 
