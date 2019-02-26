@@ -268,13 +268,14 @@ class BilligerDE extends CSVPluginGenerator
 
         // Get the images only for valid variations
         $imageList = $this->getAdditionalImages($this->getImageList($variation, $settings));
+        $barcode = $this->elasticExportHelper->getBarcodeByType($variation, $settings->get('barcode'));
 
         $data = [
             // mandatory
             'aid'           => $this->elasticExportHelper->generateSku($variation['id'], self::BILLIGER_DE, 0, (string)$variation['data']['skus'][0]['sku']),
             'brand'         => $this->elasticExportHelper->getExternalManufacturerName((int)$variation['data']['item']['manufacturer']['id']),
             'mpnr'          => $variation['data']['variation']['model'],
-            'ean'           => $this->elasticExportHelper->getBarcodeByType($variation, $settings->get('barcode')),
+            'ean'           => $barcode,
             'name'          => $this->elasticExportHelper->getMutatedName($variation, $settings) . (strlen($attributes) ? ', ' . $attributes : ''),
             'desc'          => $this->elasticExportHelper->getMutatedDescription($variation, $settings),
             'shop_cat'      => $this->elasticExportHelper->getCategory((int)$variation['data']['defaultCategories'][0]['id'], $settings->get('lang'), $settings->get('plentyId')),
@@ -308,6 +309,7 @@ class BilligerDE extends CSVPluginGenerator
             'features'      => $this->elasticExportPropertyHelper->getProperty($variation, 'features', self::BILLIGER_DE, $settings->get('lang')),
             'style'         => $this->elasticExportPropertyHelper->getProperty($variation, 'style', self::BILLIGER_DE, $settings->get('lang')),
             'old_price'     => $priceList['oldPrice'],
+			'own_brand'		=> strlen($barcode) ? 'no' : 'yes',
 
             // needed for SOP(Solute Order Platform) market
             'delivery_sop'      => $this->isPropertySet($variation, self::AVAILABLE_ON_SOP, $settings),
