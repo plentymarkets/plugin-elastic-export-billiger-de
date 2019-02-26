@@ -100,6 +100,7 @@ The following table lists details for settings, format settings and recommended 
 | style                  | **Required**<br/> The value of the property **style**. |
 | old_price              | The **price** of the variation compared to the RRP. The higher price will be preferred. |
 | images                 | Further images of the variation (seperated by comma). |
+| own_brand              | **yes** if no **ean** was found, otherwise **no**. |
 | delivery_sop           | The value of the property **delivery_sop**. The name of the property in the interface is 'Available for sale', under SOP (Solute Order Platform). |
 | stock_quantity         | **Limitation**: from 0 to 9999<br/> **Content**: The **net stock of the variation**. If the variation is not limited to net stock, **999** is set as value. |
 

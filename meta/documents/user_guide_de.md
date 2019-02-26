@@ -100,6 +100,7 @@ In der folgenden Tabelle finden Sie spezifische Hinweise zu den Einstellungen, F
 | style                  | Der Wert des Merkmals **style**. |
 | old_price              | Der **Preis** einer Variante im Vergleich zum konfigurierten UVP. Der höhere Preis wird bevorzugt. |
 | images                 | Weitere Bilder einer Variante (Kommagetrennt). |
+| own_brand              | Wenn keine **ean** gefunden wurde wird **yes** übertragen, ansonsten **no**. |
 | delivery_sop           | Der Wert des Merkmals **delivery_sop**. Der Name des Merkmals im plentymarkets Backend lautet "Zum Verkauf verfügbar", unter SOP (Solute Order Platform). |
 | stock_quantity         | **Beschränkung**: 0 bis 9999<br/> **Inhalt**: Der **Netto-Warenbestand der Variante**. Bei Artikeln, die nicht auf den Netto-Warenbestand beschränkt sind, wird **999** übertragen. |
 
