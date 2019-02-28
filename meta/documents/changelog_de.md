@@ -1,5 +1,10 @@
 # Release Notes für Elastic Export Billiger.de
 
+## v1.1.8 (2019-02-28)
+
+### Behoben
+- Die neue Spalte 'own_brand' fehlte im Header.
+
 ## v1.1.7 (2019-02-26)
 
 ### Hinzugefügt

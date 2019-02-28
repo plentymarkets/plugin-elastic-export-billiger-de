@@ -247,6 +247,7 @@ class BilligerDE extends CSVPluginGenerator
             'features',
             'style',
             'old_price',
+            'own_brand',
 
             // needed for SOP(Solute Order Platform) market
             'delivery_sop',
