@@ -3,8 +3,8 @@
 ## v1.1.9 (2019-09-10)
 
 ### Changed
-- Changed the delimiter for columns to ',' (comma)
-- Changed the delimiter for image-lists to ';' (semicolon)
+- According to the current documentation for blliger.de the delimiter for columns was changed to ',' (comma).
+- According to the current documentation for billiger.de the delimiter for image-lists was changed to ';' (semicolon).
 
 ## v1.1.8 (2019-02-28)
 

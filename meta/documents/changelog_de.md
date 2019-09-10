@@ -3,8 +3,8 @@
 ## v1.1.9 (2019-09-10)
 
 ### Geändert
-- Das Trennzeichen (Delimiter) für die Spalten wurde auf ',' (Komma) geändert
-- Das Trennzeichen (Delimiter) für die Bildliste wurde auf ";" (Semikolon) geändert
+- Das Trennzeichen (Delimiter) für Spalten wurde gemäß aktueller Dokumentation von billiger.de zu ',' (Komma) geändert.
+- Das Trennzeichen (Delimiter) für die Bild-Liste wurde gemäß aktueller Dokumentation von billiger.de zu ';' (Semikolon) geändert.
 
 ## v1.1.8 (2019-02-28)
 
