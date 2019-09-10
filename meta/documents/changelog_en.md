@@ -1,5 +1,11 @@
 # Release Notes for Elastic Export Billiger.de
 
+## v1.1.9 (2019-09-10)
+
+### Changed
+- According to the current billiger.de documentation, the delimiter for columns was changed to ',' (comma).
+- According to the current billiger.de documentation, the delimiter for image-lists was changed to ';' (semicolon).
+
 ## v1.1.8 (2019-02-28)
 
 ### Fixed

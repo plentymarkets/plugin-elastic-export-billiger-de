@@ -14,7 +14,7 @@
     "en": "The integration of the data format BilligerDE-Plugin enables the transfer of item data to the price search engine billiger.de via the elastic export."
   },
   "categories": ["3880"],
-  "version": "1.1.8",
+  "version": "1.1.9",
   "require": ["ElasticExport"],
   "marketplaceName": {
     "de": "billiger.de",

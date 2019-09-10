@@ -22,7 +22,7 @@ class BilligerDE extends CSVPluginGenerator
 {
     use Loggable;
 
-    const DELIMITER = "\t"; // TAB
+    const DELIMITER = ","; // TAB
 
     const BILLIGER_DE = 112.00;
 
@@ -417,7 +417,7 @@ class BilligerDE extends CSVPluginGenerator
 
         if(count($imageList))
         {
-            $imageListString = implode(',', $imageList);
+            $imageListString = implode(';', $imageList);
         }
 
         return $imageListString;
