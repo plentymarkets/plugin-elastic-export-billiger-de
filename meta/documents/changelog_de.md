@@ -1,5 +1,11 @@
 # Release Notes für Elastic Export Billiger.de
 
+## v1.1.10 (2019-10-09)
+
+### Geändert
+
+- Der User Guide wurde aktualisiert (Form der Anrede geändert, fehlerhafte Links korrigiert).
+
 ## v1.1.9 (2019-09-10)
 
 ### Geändert
