@@ -2,7 +2,7 @@
   "name": "ElasticExportBilligerDE",
   "description": "This plugin adds the format BilligerDE to the Elastic Export.",
   "namespace": "ElasticExportBilligerDE",
-  "author": "plentymarkets GmbH",
+  "author": "plentysystems AG",
   "type": "export",
   "authorIcon": "icon_author_xs.png",
   "serviceProvider": "ElasticExportBilligerDE\\ElasticExportBilligerDEServiceProvider",
@@ -14,7 +14,7 @@
     "en": "The integration of the data format BilligerDE-Plugin enables the transfer of item data to the price search engine billiger.de via the elastic export."
   },
   "categories": ["3880"],
-  "version": "1.1.9",
+  "version": "1.1.10",
   "require": ["ElasticExport"],
   "marketplaceName": {
     "de": "billiger.de",
