@@ -1,5 +1,10 @@
 # Release Notes for Elastic Export Billiger.de
 
+## v1.1.11 (2020-06-09)
+
+### Changed
+- Deleted the plugin description and inserted link to plentymarkets manual instead.
+
 ## v1.1.10 (2019-10-09)
 
 ### Changed
@@ -112,6 +117,6 @@
 - The plugin Elastic Export is now required to use the plugin format BilligerDE.
 
 ## v1.0.0 (2017-05-18)
- 
+
 ### Added
 - Added initial plugin files
