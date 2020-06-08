@@ -1,5 +1,10 @@
 # Release Notes für Elastic Export Billiger.de
 
+## v1.1.11 (2020-06-09)
+
+### Geändert
+- Die Plugin-Beschreibung wurde gelöscht und stattdessen ein Link zum plentymarkets Handbuch eingefügt.
+
 ## v1.1.10 (2019-10-09)
 
 ### Geändert
