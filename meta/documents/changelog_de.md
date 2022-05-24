@@ -1,5 +1,11 @@
 # Release Notes für Elastic Export Billiger.de
 
+## v1.1.12 (2022-05-24)
+
+### Geändert
+- UPDATE - Zusätzliche Updates für Kompatibilität mit PHP 8.
+
+
 ## v1.1.11 (2020-06-09)
 
 ### Geändert

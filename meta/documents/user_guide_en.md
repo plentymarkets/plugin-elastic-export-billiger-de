@@ -2,7 +2,7 @@
 # ElasticExportBilligerDE plugin user guide
 
 <div class="alert alert-info" role="alert">
-  To find out how to set up the plugin, visit the <a href="https://knowledge.plentymarkets.com/en/markets/price-search-engines/billiger-de" target="_blank">plentymarkets manual</a>.
+  To find out how to set up the plugin, visit the <a href="https://knowledge.plentymarkets.com/en-gb/manual/main/markets/billiger-de.html" target="_blank">plentymarkets manual</a>.
 </div>
 
 ## License
