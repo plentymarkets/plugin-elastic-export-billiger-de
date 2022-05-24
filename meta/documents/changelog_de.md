@@ -2,8 +2,8 @@
 
 ## v1.1.12 (2022-05-24)
 
-### Changed
-- UPDATE - Additional updates to ensure compatibility with PHP 8.
+### Geändert
+- UPDATE - Zusätzliche Updates für Kompatibilität mit PHP 8.
 
 
 ## v1.1.11 (2020-06-09)
