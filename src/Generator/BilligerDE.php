@@ -134,14 +134,14 @@ class BilligerDE extends CSVPluginGenerator
 					$this->getLogger(__METHOD__)->addReference('total', (int)$resultList['total'])->info('ElasticExportBilligerDE::log.esResultAmount');
 				}
 
-                if(count($resultList['error']) > 0)
+                if(count($resultList['error'] ?? []) > 0)
                 {
                     $this->getLogger(__METHOD__)->addReference('failedShard', $shardIterator)->error('ElasticExportBilligerDE::log.occurredElasticSearchErrors', [
                         'message' => $resultList['error'],
                     ]);
                 }
 
-                if(is_array($resultList['documents']) && count($resultList['documents']) > 0)
+                if(is_array($resultList['documents']) && count($resultList['documents'] ?? []) > 0)
                 {
                     $previousItemId = null;
 
@@ -415,7 +415,7 @@ class BilligerDE extends CSVPluginGenerator
     {
         $imageListString = '';
 
-        if(count($imageList))
+        if(count($imageList) ?? [])
         {
             $imageListString = implode(';', $imageList);
         }
